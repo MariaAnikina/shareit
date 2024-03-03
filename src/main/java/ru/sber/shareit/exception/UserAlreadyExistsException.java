@@ -1,0 +1,7 @@
+package ru.sber.shareit.exception;
+
+public class UserAlreadyExistsException extends RuntimeException {
+	public UserAlreadyExistsException(String message) {
+		super(message);
+	}
+}

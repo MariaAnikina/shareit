@@ -6,8 +6,9 @@ import ru.sber.shareit.entity.Role;
 import ru.sber.shareit.entity.User;
 
 public class UserMapper {
-	public static UserInfoDto toUserOutDto(User user) {
+	public static UserInfoDto toUserInfoDto(User user) {
 		return new UserInfoDto(
+				user.getId(),
 				user.getUsername(),
 				user.getName(),
 				user.getEmail(),

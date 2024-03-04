@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение пользователя</title>
+    <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<h2>Данные о пользователе</h2>
+<ul>
+    <li>Логин: <span th:text="${user.getUsername()}"></span></li>
+    <li>Имя: <span th:text="${user.getName()}"></span></li>
+    <li>Email: <span th:text="${user.getEmail()}"></span></li>
+    <li>Город: <span th:text="${user.getCity()}"></span></li>
+</ul>
+<br>
+<a th:href="@{/users/update/{userId}(userId=${user.getId()})}">Обновить данные о себе</a> <br>
+<form method="post" th:action="@{/users/delete/{userId}(userId=${user.getId()})}">
+    <input type="hidden" name="_method" value="DELETE"/>
+    <button type="submit">Удалить аккаунт</button>
+</form>
+</body>
+</html>

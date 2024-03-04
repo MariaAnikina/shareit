@@ -16,6 +16,7 @@ import ru.sber.shareit.repository.UserRepository;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.util.mapper.UserMapper;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,20 +36,21 @@ public class UserServiceImpl implements UserService {
 	public List<UserInfoDto> getUsers() {
 		log.info("Запрошен список пользователей");
 		return userRepository.findAll().stream()
-				.map(UserMapper::toUserOutDto)
+				.sorted(Comparator.comparing(User::getUsername))
+				.map(UserMapper::toUserInfoDto)
 				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public UserDto getUsersById(Long id) {
+	public UserInfoDto getUsersById(Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException("Пользователь с id=" + id + " не найден");
 		}
 		User user = userOptional.get();
 		log.info("Запрошен пользователь {}", user);
-		return null;
+		return UserMapper.toUserInfoDto(user);
 	}
 
 	@Transactional
@@ -56,6 +58,9 @@ public class UserServiceImpl implements UserService {
 	public UserDto create(UserDto userDto) {
 		try {
 			User user = toUserNoRole(userDto);
+			if (user.getUsername().equals("moderator")) {
+				user.setRole(Role.ROLE_MODERATOR);
+			}
 			if (userDto.getRole() == null) {
 				user.setRole(Role.ROLE_USER);
 			} else {
@@ -76,21 +81,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto update(Long id, UserDto userDto) {
 		try {
-			Long userId = userDto.getId();
-			Optional<User> userOptional = userRepository.findById(userId);
+			Optional<User> userOptional = userRepository.findById(id);
 			if (userOptional.isEmpty()) {
-				throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
+				throw new UserNotFoundException("Пользователь с id=" + id + " не найден");
 			}
+			userDto.setRole(Role.ROLE_USER.toString());
 			User oldUser = userOptional.get();
 			User updateUser = toUser(userDto);
-
-			updateUser.setUsername(oldUser.getUsername());
-			updateUser.setPassword(oldUser.getPassword());
-			updateUser.setEmail(oldUser.getEmail());
-			updateUser.setName(oldUser.getName());
-			updateUser.setName(oldUser.getName());
-			updateUser.setCity(oldUser.getCity());
-
+			updateUser(id, oldUser, updateUser);
 			User user = userRepository.save(updateUser);
 			log.info("Обновлен пользователь {}", user);
 			return toUserDto(user);
@@ -117,5 +115,27 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean existUserByEmail(String email) {
 		return userRepository.findByEmail(email).isPresent();
+	}
+
+	private void updateUser(Long id, User oldUser, User updateUser) {
+		updateUser.setId(id);
+		if (updateUser.getUsername() == null || updateUser.getUsername().isBlank()) {
+			updateUser.setUsername(oldUser.getUsername());
+		}
+		if (updateUser.getPassword() == null || updateUser.getPassword().isBlank()) {
+			updateUser.setPassword(oldUser.getPassword());
+		} else {
+			String encodedPassword = passwordEncoder.encode(updateUser.getPassword());
+			updateUser.setPassword(encodedPassword);
+		}
+		if (updateUser.getEmail() == null || updateUser.getEmail().isBlank()) {
+			updateUser.setEmail(oldUser.getEmail());
+		}
+		if (updateUser.getName() == null || updateUser.getName().isBlank()) {
+			updateUser.setName(oldUser.getName());
+		}
+		if (updateUser.getCity() == null || updateUser.getCity().isBlank()) {
+			updateUser.setCity(oldUser.getCity());
+		}
 	}
 }

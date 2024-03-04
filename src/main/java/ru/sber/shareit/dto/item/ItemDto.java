@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.sber.shareit.dto.booking.BookingDto;
+import ru.sber.shareit.entity.TimeOfYear;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,9 +22,11 @@ public class ItemDto {
 	private String description;
 	@JsonProperty("available")
 	@NotNull(message = "Должна быть указана доступность вещи")
-	private final Boolean available;
+	private Boolean available;
 	private Long requestId;
-	private final BookingDto lastBooking;
-	private final BookingDto nextBooking;
-	private final List<CommentDto> comments;
+	private BookingDto lastBooking;
+	private BookingDto nextBooking;
+	private List<CommentDto> comments;
+	@NotNull(message = "Укажите в какое время года вещь более актуальна")
+	private String timeOfYear;
 }

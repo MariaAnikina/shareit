@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+    <style> body{
+        background-color: #cddecd;
+    }</style>
 </head>
 <body>
-<form th:method="POST" th:action="@{/templates/auth/registration}" th:object="${user}">
+<div style="text-align:center">
+    <h1>Регистрация</h1>
+<form th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
     <label for="username">Введите логин</label>
     <input type="text" th:field="*{username}" id="username"/>
     <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
@@ -34,8 +40,9 @@
     <input type="text" th:field="*{city}" id="city"/>
     <div style="color: red" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">
         Некорректный город проживания
-    </div>
+    </div> <br/><br/>
     <input type="submit" value="Зарегистрировать"/>
 </form>
+</div>
 </body>
 </html>

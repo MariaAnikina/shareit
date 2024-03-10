@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение своих вещей</title>
+    <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<h2>Мои вещи</h2>
+<ul>
+    <li th:each="item : ${items}">
+        <a th:href="@{'/items/owner/' + ${item.getId()}}" th:text="${item.getName()}"></a>
+    </li>
+</ul>
+
+<div>
+    <a th:if="${currentPage > 0}" th:href="@{/items(from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
+    <a th:if="${items.size() == size}" th:href="@{/items(from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
+</div>
+</body>
+</html>

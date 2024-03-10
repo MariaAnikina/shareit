@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.dto.user.UserDto;
-import ru.sber.shareit.entity.Status;
+import ru.sber.shareit.entity.BookingStatus;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
@@ -24,5 +24,5 @@ public class BookingDtoFull {
 	private LocalDateTime end;
 	private ItemDto item;
 	private UserDto booker;
-	private Status status;
+	private BookingStatus bookingStatus;
 }

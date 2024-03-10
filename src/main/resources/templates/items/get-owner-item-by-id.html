@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение своей вещи по Id</title>
+    <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<h2>Данные о вещи</h2>
+
+Название: <span th:text="${item.getName()}"></span><br>
+Описание: <span th:text="${item.getDescription()}"></span><br>
+Доступна: <span th:text="${item.getAvailable()}"></span><br>
+Город: <span th:text="${item.getCity()}"></span><br>
+<p th:if="${item.getRequestId() != null}"><span th:text="${item.getRequestId()}"></span></p><br>
+<p th:if="${item.getLastBooking() != null}"><span th:text="${item.getLastBooking().getStart()}"> Начало последнего бронирования</span>
+</p><br>
+<p th:if="${item.getLastBooking() != null}"><span th:text="${item.getLastBooking().getEnd()}"> Окончание последнего бронирования</span>
+</p><br>
+<p th:if="${item.getLastBooking() != null}"><span th:text="${item.getLastBooking().getBookerId()}"> Id человека, который забронировал вещь</span>
+</p><br>
+<p th:if="${item.getLastBooking() != null}"><span th:text="${item.getLastBooking().getBookingStatus()}"> - статус бронирования</span>
+</p> <br><br>
+
+<p th:if="${item.getNextBooking() != null}"><span th:text="${item.getLastBooking().getStart()}"> Начало последнего бронирования</span>
+</p><br>
+<p th:if="${item.getNextBooking()  != null}"><span th:text="${item.getLastBooking().getEnd()}"> Окончание последнего бронирования</span>
+</p><br>
+<p th:if="${item.getNextBooking() != null}"><span th:text="${item.getLastBooking().getBookerId()}"> Id человека, который забронировал вещь</span>
+</p><br>
+<p th:if="${item.getNextBooking() != null}"><span th:text="${item.getNextBooking().getBookingStatus()}"> - статус бронирования</span>
+</p><br><br>
+
+
+<p th:if="${item.getComments() != null}">
+    Комментарии
+<ul>
+    <li th:each="comment : ${item.getComments()}" th:text="${comment}"></li>
+</ul>
+</p><br>
+
+<br>
+<a th:href="@{/items/update/{itemId}(itemId=${itemId})}">Обновить данные о вещи</a> <br>
+<form method="post" th:action="@{/items/delete/{itemId}(itemId=${itemId})}">
+    <input type="hidden" name="_method" value="DELETE"/>
+    <button type="submit">Удалить вещь</button>
+</form>
+</body>
+</html>

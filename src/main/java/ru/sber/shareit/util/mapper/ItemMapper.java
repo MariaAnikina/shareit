@@ -17,7 +17,8 @@ public class ItemMapper {
 				last == null ? null : BookingMapper.toBookingDto(last),
 				next == null ? null : BookingMapper.toBookingDto(next),
 				comments,
-				item.getRelevantTimeOfYear().toString()
+				item.getRelevantTemperatureInterval().toString(),
+				item.getCity()
 		);
 	}
 
@@ -29,7 +30,8 @@ public class ItemMapper {
 				itemDto.getAvailable(),
 				user,
 				itemRequest,
-				TimeOfYear.valueOf(itemDto.getTimeOfYear())
+				TemperatureIntervals.valueOf(itemDto.getRelevantTemperatureInterval()),
+				itemDto.getCity()
 		);
 	}
 }

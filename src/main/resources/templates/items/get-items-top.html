@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение списка вещей, соответствующих погоде</title>
+    <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<nav>
+    <form action="/items/search" method="get">
+        <input type="text" name="text" />
+        <button type="submit">Найти</button>
+    </form> <br>
+
+</nav>
+<h2>Актуально</h2>
+<ul>
+    <li th:each="item : ${items}">
+        <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
+    </li>
+</ul>
+
+<div>
+    <a th:if="${currentPage > 0}" th:href="@{/items/top(from=${currentPage * size - size}, size=${size})}">Previous</a>
+    <a th:if="${items.size() == size}" th:href="@{/items/top(from=${currentPage * size + size}, size=${size})}">Next</a>
+</div>
+</body>
+</html>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.util.UserValidator;
+import ru.sber.shareit.util.group.Create;
 import ru.sber.shareit.util.group.Update;
 
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 @AllArgsConstructor
 @RequestMapping("/users")
 @Controller
+@Validated
 public class UserController {
 	private final UserService userService;
 	private final UserValidator userValidator;
@@ -37,9 +39,9 @@ public class UserController {
 		return "users/create-user";
 	}
 
-
+	@Validated(Create.class)
 	@PostMapping("/create")
-	public String performCreateUser(@ModelAttribute("user") UserDto userDto,
+	public String performCreateUser(@Valid @ModelAttribute("user") UserDto userDto,
 	                                  BindingResult bindingResult) {
 		userValidator.validate(userDto, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -50,8 +52,7 @@ public class UserController {
 	}
 
 	@GetMapping("/update/{userId}")
-	public String updateUserPage(@PathVariable long userId, Model model) {
-		System.out.println(userId);
+	public String updateUserPage(@PathVariable Long userId, Model model) {
 		model.addAttribute("userId", userId);
 		model.addAttribute("user", new UserDto());
 		return "users/update-user";
@@ -60,9 +61,8 @@ public class UserController {
 
 	@Validated(Update.class)
 	@PutMapping("/update/{userId}")
-	public String performUpdateUser(@ModelAttribute("user") UserDto userDto,
-	                                BindingResult bindingResult, @PathVariable long userId) {
-		System.out.println(userId);
+	public String performUpdateUser(@Valid @ModelAttribute("user") UserDto userDto,
+	                                BindingResult bindingResult, @PathVariable Long userId) {
 		userValidator.validate(userDto, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "users/update-user";
@@ -72,7 +72,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/delete/{userId}")
-	public String deleteUser(@PathVariable long userId) {
+	public String deleteUser(@PathVariable Long userId) {
 		userService.delete(userId);
 		return "auth/login";
 	}

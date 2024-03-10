@@ -19,9 +19,7 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "item_id")
 	private Long id;
-	@Column(length = 127)
 	private String name;
-	@Column(length = 2000)
 	private String description;
 	@Column(name = "is_available")
 	private Boolean available;
@@ -31,6 +29,8 @@ public class Item {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "request_id")
 	private ItemRequest request;
-	@Column(name = "relevant_time_of_year")
-	private TimeOfYear relevantTimeOfYear;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "relevant_temperature_interval")
+	private TemperatureIntervals relevantTemperatureInterval;
+	private String city;
 }

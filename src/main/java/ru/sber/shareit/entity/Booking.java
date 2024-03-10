@@ -29,5 +29,5 @@ public class Booking {
 	private User booker;
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
-	private Status status;
+	private BookingStatus bookingStatus;
 }

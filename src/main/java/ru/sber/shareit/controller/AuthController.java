@@ -2,6 +2,7 @@ package ru.sber.shareit.controller;
 
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ import ru.sber.shareit.util.UserValidator;
 
 import javax.servlet.http.HttpServletResponse;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -48,11 +49,5 @@ public class AuthController {
 		}
 		service.create(userDto);
 		return "redirect:/auth/login";
-	}
-
-	//метод для тестирования
-	@GetMapping("/h")
-	public String h() {
-		return "auth/h";
 	}
 }

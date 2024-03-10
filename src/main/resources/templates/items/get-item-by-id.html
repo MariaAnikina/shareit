@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение вещи по id</title>
+    <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<h2>Данные о вещи</h2>
+
+Название: <span th:text="${item.getName()}"></span><br>
+Описание: <span th:text="${item.getDescription()}"></span><br>
+Доступна: <span th:text="${item.getAvailable()}"></span><br>
+Город: <span th:text="${item.getCity()}"></span><br>
+</body>
+</html>

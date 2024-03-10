@@ -3,7 +3,7 @@ package ru.sber.shareit.dto.booking;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.sber.shareit.entity.Status;
+import ru.sber.shareit.entity.BookingStatus;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
@@ -23,5 +23,5 @@ public class BookingDto {
 	@NotNull(message = "Id бронируемой вещи не должно быть null")
 	private final Long itemId;
 	private Long bookerId;
-	private Status status;
+	private BookingStatus bookingStatus;
 }

@@ -6,7 +6,17 @@ h2 {
 }
 body {
     background-color: #cddecd;
+    text-align: center;
 }
 header {
     text-align: center;
+}
+a {
+    color: #1f4639;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #55bb11;
 }

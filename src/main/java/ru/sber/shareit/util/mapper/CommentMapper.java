@@ -6,6 +6,7 @@ import ru.sber.shareit.entity.Item;
 import ru.sber.shareit.entity.User;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommentMapper {
 	public static CommentDto commentToDto(Comment comment, String name) {
@@ -13,7 +14,7 @@ public class CommentMapper {
 				comment.getId(),
 				comment.getText(),
 				name,
-				comment.getCreated()
+				comment.getCreated().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
 		);
 	}
 

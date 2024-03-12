@@ -11,7 +11,8 @@ import ru.sber.shareit.dto.user.UserDto;
 public class ItemValidator implements Validator {
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return ItemDto.class.equals(clazz);	}
+		return ItemDto.class.equals(clazz);
+	}
 
 	@Override
 	public void validate(Object o, Errors errors) {

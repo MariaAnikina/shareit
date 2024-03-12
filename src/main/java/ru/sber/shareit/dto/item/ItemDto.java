@@ -24,6 +24,7 @@ public class ItemDto {
 	private String description;
 	@NotNull(message = "Должна быть указана доступность вещи")
 	private Boolean available;
+	private Long ownerId;
 	private Long requestId;
 	private BookingDto lastBooking;
 	private BookingDto nextBooking;

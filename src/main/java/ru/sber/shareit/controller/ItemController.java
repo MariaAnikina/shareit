@@ -10,11 +10,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.sber.shareit.dto.booking.BookingDto;
+import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.ItemService;
+import ru.sber.shareit.util.CommentValidator;
 import ru.sber.shareit.util.ItemValidator;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -26,6 +30,8 @@ public class ItemController {
 	private final ItemService itemService;
 //	private static final String USER_ID_HEADER = "X-Sharer-User-Id";
 	private final ItemValidator itemValidator;
+
+	private final CommentValidator commentValidator;
 
 	@GetMapping("/create")
 	public String createItemPage(@ModelAttribute("item") ItemDto itemDto) {
@@ -49,6 +55,8 @@ public class ItemController {
 		Long userId = getUserId();
 		model.addAttribute("item", itemService.getItemById(userId, itemId));
 		model.addAttribute("itemId", itemId);
+		model.addAttribute("comment", new CommentDto());
+		model.addAttribute("booking", new BookingDto());
 		return "items/get-item-by-id";
 	}
 
@@ -129,6 +137,19 @@ public class ItemController {
 		return "items/get-items-by-text";
 	}
 
+	@PostMapping("/comment/{itemId}")
+	public String addComment(@Valid @ModelAttribute("comment") CommentDto commentDto,
+	                         BindingResult bindingResult, @PathVariable Long itemId) {
+
+		Long userId = getUserId();
+		commentValidator.validate(commentDto, bindingResult);
+		if (bindingResult.hasErrors()) {
+			return "redirect:/items/" + itemId;
+		}
+		itemService.addComment(userId, itemId, commentDto);
+		return "redirect:/items/" + itemId;
+	}
+
 	private Long getUserId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userId = null;
@@ -138,16 +159,4 @@ public class ItemController {
 		}
 		return userId;
 	}
-
-//	@PostMapping("/create")
-//	public String performCreateItem(@RequestHeader(USER_ID_HEADER) String userId,
-//	                                @ModelAttribute("item") ItemDto itemDto,
-//	                                BindingResult bindingResult) {
-//		itemValidator.validate(itemDto, bindingResult);
-//		if (bindingResult.hasErrors()) {
-//			return "users/create-user";
-//		}
-//		itemService.create(Long.parseLong(userId), itemDto);
-//		return "redirect:/users";
-//	}
 }

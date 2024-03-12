@@ -13,6 +13,7 @@ public class ItemMapper {
 				item.getName(),
 				item.getDescription(),
 				item.getAvailable(),
+				item.getOwner().getId(),
 				item.getRequest() == null ? null : item.getRequest().getId(),
 				last == null ? null : BookingMapper.toBookingDto(last),
 				next == null ? null : BookingMapper.toBookingDto(next),

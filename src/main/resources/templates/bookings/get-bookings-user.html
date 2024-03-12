@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение бронирований пользователя</title>
+    <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<h1>Список бронирований</h1>
+<ul>
+  <li th:each="booking : ${bookings}">
+    <a th:href="@{'/bookings/' + ${booking.getId()}}" th:text="${booking.getId()}"></a>
+  </li>
+</ul>
+<a th:href="@{/bookings(state=CURRENT)}">Текущие бронирования</a>
+<a th:href="@{/bookings(state=PAST)}">Прошедшие бронирования</a>
+<a th:href="@{/bookings(state=FUTURE)}">Будущие бронирования</a>
+<a th:href="@{/bookings(state=WAITING)}">Ожидающие бронирования</a>
+<a th:href="@{/bookings(state=REJECTED)}">Отклоненные бронирования</a>
+
+<div>
+  <a th:if="${currentPage > 0}" th:href="@{/bookings/owner(state=${state},from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
+  <a th:if="${bookings.size() == size}" th:href="@{/bookings/owner(state=${state},from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
+</div>
+</body>
+</html>

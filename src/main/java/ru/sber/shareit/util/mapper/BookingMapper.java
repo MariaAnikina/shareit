@@ -6,12 +6,17 @@ import ru.sber.shareit.entity.Booking;
 import ru.sber.shareit.entity.Item;
 import ru.sber.shareit.entity.User;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class BookingMapper {
+	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
 	public static Booking toBooking(BookingDto bookingDto, User booker, Item item) {
 		return new Booking(
 				bookingDto.getId(),
-				bookingDto.getStart(),
-				bookingDto.getEnd(),
+				LocalDateTime.parse(bookingDto.getStart(), formatter),
+				LocalDateTime.parse(bookingDto.getEnd(), formatter),
 				item,
 				booker,
 				bookingDto.getBookingStatus()
@@ -32,8 +37,8 @@ public class BookingMapper {
 	public static BookingDto toBookingDto(Booking booking) {
 		return new BookingDto(
 				booking.getId(),
-				booking.getStart(),
-				booking.getEnd(),
+				booking.getStart().toString(),
+				booking.getEnd().toString(),
 				booking.getItem().getId(),
 				booking.getBooker().getId(),
 				booking.getBookingStatus()

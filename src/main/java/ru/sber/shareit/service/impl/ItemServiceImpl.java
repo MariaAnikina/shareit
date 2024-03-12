@@ -184,7 +184,22 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
-	return null;
+		Optional<User> authorOptional = userRepository.findById(userId);
+		if (authorOptional.isEmpty()) {
+			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
+		}
+		User author = authorOptional.get();
+		Optional<Item> itemOptional = itemRepository.findById(itemId);
+		if (itemOptional.isEmpty()) {
+			throw new ItemNotFoundException("Вещь с id=" + itemId + " не найдена");
+		}
+		Item item = itemOptional.get();
+//		if (!bookingRepository.existsByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now())) {
+//			throw new BookingEndTimeException("Бронирование еще не завершилось");
+//		}
+		Comment comment = commentRepository.save(commentFromDto(commentDto, item, author));
+		log.info("Добавлен комментарий '{}'", comment);
+		return commentToDto(comment, author.getName());
 	}
 
 	@Override

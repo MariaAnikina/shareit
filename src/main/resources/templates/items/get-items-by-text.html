@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
 </head>
 <body>
+<div>
+    <h2>Создать запрос на вещь</h2>
+    <form th:action="@{/requests}" method="post" th:object="${request}">
+        <label for="description">Введите название вещи, которую хотите найти</label>
+        <input type="text" th:field="*{description}" id="description"/>
+        <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+            Описание запроса не может быть пустым
+        </div>
+        <button type="submit">Создать запрос</button>
+    </form>
+</div>
 <h2>Результаты поиска по запросу</h2>
 <ul>
   <li th:each="item : ${items}">

@@ -1,10 +1,8 @@
 package ru.sber.shareit.controller;
 
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +14,6 @@ import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.service.impl.UserDetailsServiceImpl;
 import ru.sber.shareit.util.UserValidator;
-
-import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @Controller
@@ -35,7 +31,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/registration")
-	public String registrationPage(@ModelAttribute("user")UserDto userDto) {
+	public String registrationPage(@ModelAttribute("user") UserDto userDto) {
 		return "auth/registration";
 	}
 

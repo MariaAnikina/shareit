@@ -23,9 +23,5 @@
     <a th:if="${currentPage > 0}" th:href="@{/items/top(from=${currentPage * size - size}, size=${size})}">Previous</a>
     <a th:if="${items.size() == size}" th:href="@{/items/top(from=${currentPage * size + size}, size=${size})}">Next</a>
 </div>
-<div>
-    <a th:if="${currentPage > 0}" th:href="@{/items/top(from=${currentPage * size - size}, size=${size})}">Previous</a>
-    <a th:if="${items.size() == size}" th:href="@{/items/top(from=${currentPage * size + size}, size=${size})}">Next</a>
-</div>
 </body>
 </html>

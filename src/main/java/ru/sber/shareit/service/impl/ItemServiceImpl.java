@@ -2,7 +2,6 @@ package ru.sber.shareit.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,10 @@ import org.springframework.web.client.RestTemplate;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.entity.*;
+import ru.sber.shareit.entity.enams.BookingStatus;
+import ru.sber.shareit.entity.enams.TemperatureIntervals;
 import ru.sber.shareit.exception.*;
-import ru.sber.shareit.repository.BookingRepository;
-import ru.sber.shareit.repository.CommentRepository;
-import ru.sber.shareit.repository.ItemRepository;
-import ru.sber.shareit.repository.UserRepository;
+import ru.sber.shareit.repository.*;
 import ru.sber.shareit.service.ItemService;
 import ru.sber.shareit.util.mapper.TemperatureMapper;
 
@@ -40,6 +38,7 @@ public class ItemServiceImpl implements ItemService {
 	private final BookingRepository bookingRepository;
 	private final CommentRepository commentRepository;
 	private final TemperatureMapper temperatureMapper;
+	private final ItemRequestRepository itemRequestRepository;
 	private static final String API_KEY_WEATHER = "0559176db0fdda660a02176fe8a89461";
 
 
@@ -52,6 +51,13 @@ public class ItemServiceImpl implements ItemService {
 		}
 		itemDto.setAvailable(true);
 		ItemRequest itemRequest = null;
+		Long requestId = itemDto.getRequestId();
+		if (requestId != null) {
+			Optional<ItemRequest> itemRequestOptional = itemRequestRepository.findById(requestId);
+			if (itemRequestOptional.isEmpty())
+				throw new ItemRequestNotFoundException("Запрос с id=" + requestId + " не найден");
+			itemRequest = itemRequestOptional.get();
+		}
 		User user = userOptional.get();
 		itemDto.setCity(user.getCity());
 		Item item = itemRepository.save(
@@ -194,9 +200,9 @@ public class ItemServiceImpl implements ItemService {
 			throw new ItemNotFoundException("Вещь с id=" + itemId + " не найдена");
 		}
 		Item item = itemOptional.get();
-//		if (!bookingRepository.existsByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now())) {
-//			throw new BookingEndTimeException("Бронирование еще не завершилось");
-//		}
+		if (!bookingRepository.existsByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now())) {
+			throw new BookingEndTimeException("Бронирование еще не завершилось");
+		}
 		Comment comment = commentRepository.save(commentFromDto(commentDto, item, author));
 		log.info("Добавлен комментарий '{}'", comment);
 		return commentToDto(comment, author.getName());

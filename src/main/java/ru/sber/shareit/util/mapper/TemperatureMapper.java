@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.sber.shareit.entity.TemperatureIntervals;
+import ru.sber.shareit.entity.enams.TemperatureIntervals;
 
-import static ru.sber.shareit.entity.TemperatureIntervals.*;
+import static ru.sber.shareit.entity.enams.TemperatureIntervals.*;
 
 @Component
 @RequiredArgsConstructor

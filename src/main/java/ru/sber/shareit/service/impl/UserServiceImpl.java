@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.dto.user.UserInfoDto;
-import ru.sber.shareit.entity.Role;
+import ru.sber.shareit.entity.enams.Role;
 import ru.sber.shareit.entity.User;
 import ru.sber.shareit.exception.UserAlreadyExistsException;
 import ru.sber.shareit.exception.UserNotFoundException;

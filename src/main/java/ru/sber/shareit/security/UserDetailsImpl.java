@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.entity.User;
 
 import java.util.Collection;

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.sber.shareit.entity.Item;
-import ru.sber.shareit.entity.TemperatureIntervals;
+import ru.sber.shareit.entity.enams.TemperatureIntervals;
 
 import java.util.List;
 
@@ -22,4 +22,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 	Page<Item> findAllByOwnerIdIsNotAndAvailableIsTrueAndRelevantTemperatureIntervalIsAndCityOrderByName(
 			Long owner_id, TemperatureIntervals relevantTemperatureInterval, String city, Pageable pageable);
+
+	List<Item> findByRequestId(Long id);
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение всех запросов</title>
+</head>
+<body>
+<ul>
+    <li th:each="request : ${requests}">
+        <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
+    </li>
+</ul>
+
+
+<div>
+    <a th:if="${currentPage > 0}" th:href="@{/requests/all(from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
+    <a th:if="${requests.size() == size}" th:href="@{/requests/all(from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
+</div>
+</body>
+</html>

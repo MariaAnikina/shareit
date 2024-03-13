@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,4 +25,6 @@ public class ItemRequest {
 	@JoinColumn(name = "requestor_id", nullable = false)
 	private User requestor;
 	private LocalDateTime created;
+	@Transient
+	private List<Item> items;
 }

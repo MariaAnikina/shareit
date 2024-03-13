@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.booking.BookingDto;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
+import ru.sber.shareit.dto.request.ItemRequestDto;
 import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.ItemService;
 import ru.sber.shareit.util.CommentValidator;
@@ -28,7 +29,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Validated
 public class ItemController {
 	private final ItemService itemService;
-//	private static final String USER_ID_HEADER = "X-Sharer-User-Id";
 	private final ItemValidator itemValidator;
 
 	private final CommentValidator commentValidator;
@@ -44,7 +44,7 @@ public class ItemController {
 		Long userId = getUserId();
 		itemValidator.validate(itemDto, bindingResult);
 		if (bindingResult.hasErrors()) {
-			return "users/create-user";
+			return "items/create-item";
 		}
 		itemService.create(userId, itemDto);
 		return "redirect:/users";
@@ -133,7 +133,7 @@ public class ItemController {
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
 		model.addAttribute("items", itemService.findItems(text, from, size));
-
+		model.addAttribute("request", new ItemRequestDto());
 		return "items/get-items-by-text";
 	}
 

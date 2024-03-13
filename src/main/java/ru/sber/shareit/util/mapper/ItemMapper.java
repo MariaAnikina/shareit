@@ -3,6 +3,7 @@ package ru.sber.shareit.util.mapper;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.entity.*;
+import ru.sber.shareit.entity.enams.TemperatureIntervals;
 
 import java.util.List;
 

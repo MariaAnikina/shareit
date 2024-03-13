@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.sber.shareit.dto.booking.BookingDto;
 import ru.sber.shareit.dto.booking.BookingDtoFull;
 import ru.sber.shareit.entity.*;
+import ru.sber.shareit.entity.enams.BookingState;
+import ru.sber.shareit.entity.enams.BookingStatus;
 import ru.sber.shareit.exception.*;
 import ru.sber.shareit.repository.BookingRepository;
 import ru.sber.shareit.repository.ItemRepository;

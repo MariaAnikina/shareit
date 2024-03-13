@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.sber.shareit.entity.BookingStatus;
+import ru.sber.shareit.entity.enams.BookingStatus;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

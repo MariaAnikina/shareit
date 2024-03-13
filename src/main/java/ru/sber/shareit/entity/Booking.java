@@ -3,6 +3,7 @@ package ru.sber.shareit.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.sber.shareit.entity.enams.BookingStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

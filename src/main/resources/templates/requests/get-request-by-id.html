@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение запроса по id</title>
+</head>
+<body>
+<h2>Данные о запросе</h2>
+
+Дата создание запроса: <span th:text="${request.getCreated()}"></span><br>
+Описание запроса: <span th:text="${request.getDescription()}"></span><br>
+<br/> <br/>
+Создать вещь под запрос:
+<form th:method="POST" th:action="@{/items/create}" th:object="${item}">
+    <input type="hidden" th:field="*{name}" id="name" th:value="${request.getDescription()}"/>
+    <input type="hidden" th:field="*{requestId}" id="requestId" th:value="${request.getId()}"/>
+    <label for="description">Введите описание</label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+        Некорректное описание
+    </div>
+    <br/>
+    <label for="relevantTemperatureInterval">Выберете промежуток температуры, когда вещь наиболее актуальна</label>
+    <select path="relevantTemperatureInterval" th:field="*{relevantTemperatureInterval}" id="relevantTemperatureInterval">
+        <option value="ALWAYS_RELEVANT">Всегда актуальна</option>
+        <option value="VERY_COLD">[-50;-15)</option>
+        <option value="COLD">[-15; 0)</option>
+        <option value="NEUTRAL">[0; 10)</option>
+        <option value="WARM">[10; 20)</option>
+        <option value="VERY_WARM">[20; 50]</option>
+    </select><br/><br/>
+    <input type="submit" value="Создать"/>
+</form>
+<br/> <br/>
+Вещи подходящие под запрос:
+<div th:if = "${request.getItems().size() == 0}">
+    Пока нет подходящих вещей
+</div>
+<ul>
+    <li th:each="item : ${request.getItems()}">
+        <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
+    </li>
+</ul>
+</body>
+</html>

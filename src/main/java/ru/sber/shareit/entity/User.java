@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import ru.sber.shareit.entity.enams.Role;
 
 import javax.persistence.*;
 

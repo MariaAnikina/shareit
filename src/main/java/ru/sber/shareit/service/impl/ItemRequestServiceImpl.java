@@ -61,16 +61,26 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ItemRequestDto> getAllItemRequests(Long userId, int from, int size) {
-		if (!userRepository.existsById(userId)) {
+	public List<ItemRequestDto> getAllItemRequests(Long userId, boolean myCity, int from, int size) {
+		Optional<User> userOptional = userRepository.findById(userId);
+		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
 		int page = from / size;
-		log.info("Пользователь с id={} запросил запросы других пользователей", userId);
-		return itemRequestRepository.findByRequestorIdNotOrderByCreatedDesc(userId, PageRequest.of(page, size)).stream()
-				.peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId())))
-				.map(ItemRequestMapper::toItemRequestDto)
-				.collect(Collectors.toList());
+		if (!myCity) {
+			log.info("Пользователь с id={} запросил запросы других пользователей", userId);
+			return itemRequestRepository.findByRequestorIdNotOrderByCreatedDesc(userId, PageRequest.of(page, size)).stream()
+					.peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId())))
+					.map(ItemRequestMapper::toItemRequestDto)
+					.collect(Collectors.toList());
+		} else {
+			log.info("Пользователь с id={} запросил запросы других пользователей в своем городе", userId);
+			return itemRequestRepository.findByRequestorIdNotAndRequestorCityIsOrderByCreatedDesc(userId,
+							userOptional.get().getCity(), PageRequest.of(page, size)).stream()
+					.peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId())))
+					.map(ItemRequestMapper::toItemRequestDto)
+					.collect(Collectors.toList());
+		}
 	}
 
 	@Override

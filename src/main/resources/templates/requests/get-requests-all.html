@@ -5,6 +5,8 @@
     <title>Получение всех запросов</title>
 </head>
 <body>
+<a th:href="@{'/requests/all'(myCity=true)}"> Запросы моего города</a>
+
 <ul>
     <li th:each="request : ${requests}">
         <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>

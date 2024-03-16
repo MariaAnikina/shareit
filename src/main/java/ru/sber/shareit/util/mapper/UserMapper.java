@@ -12,6 +12,7 @@ public class UserMapper {
 				user.getUsername(),
 				user.getName(),
 				user.getEmail(),
+				user.getRole().toString(),
 				user.getCity()
 		);
 	}
@@ -24,17 +25,6 @@ public class UserMapper {
 				userDto.getName(),
 				userDto.getEmail(),
 				Role.valueOf(userDto.getRole()),
-				userDto.getCity()
-		);
-	}
-
-	public static User toUserNoRole(UserDto userDto) {
-		return new User(
-				userDto.getId(),
-				userDto.getUsername(),
-				userDto.getPassword(),
-				userDto.getName(),
-				userDto.getEmail(),
 				userDto.getCity()
 		);
 	}

@@ -4,45 +4,47 @@
     <meta charset="UTF-8">
     <title>Registration</title>
     <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
-    <style> body{
+    <style> body {
         background-color: #cddecd;
     }</style>
 </head>
 <body>
 <div style="text-align:center">
     <h1>Регистрация</h1>
-<form th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
-    <label for="username">Введите логин</label>
-    <input type="text" th:field="*{username}" id="username"/>
-    <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
-        Некорректный логин
-    </div>
-    <br/>
-    <label for="password">Введите пароль</label>
-    <input type="password" th:field="*{password}" id="password"/>
-    <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-        Некорректный пароль
-    </div>
-    <br/>
-    <label for="name">Введите ваше имя</label>
-    <input type="text" th:field="*{name}" id="name"/>
-    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
-        Некорректное имя
-    </div>
-    <br/>
-    <label for="email">Введите email</label>
-    <input type="text" th:field="*{email}" id="email"/>
-    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-        Некорректный email
-    </div>
-    <br/>
-    <label for="email">Введите город проживания</label>
-    <input type="text" th:field="*{city}" id="city"/>
-    <div style="color: red" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">
-        Некорректный город проживания
-    </div> <br/><br/>
-    <input type="submit" value="Зарегистрировать"/>
-</form>
+    <form th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
+        <label for="username">Введите логин</label>
+        <input type="text" th:field="*{username}" id="username"/>
+            <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                Некорректный логин
+            </div>
+
+        <br/>
+        <label for="password">Введите пароль</label>
+        <input type="password" th:field="*{password}" id="password"/>
+        <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+            Некорректный пароль
+        </div>
+        <br/>
+        <label for="name">Введите ваше имя</label>
+        <input type="text" th:field="*{name}" id="name"/>
+        <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+            Некорректное имя
+        </div>
+        <br/>
+        <label for="email">Введите email</label>
+        <input type="text" th:field="*{email}" id="email"/>
+        <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+            Некорректный email
+        </div>
+        <br/>
+        <label for="email">Введите город проживания</label>
+        <input type="text" th:field="*{city}" id="city"/>
+        <div style="color: red" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">
+            Некорректный город проживания
+        </div>
+        <br/><br/>
+        <input type="submit" value="Зарегистрировать"/>
+    </form>
 </div>
 </body>
 </html>

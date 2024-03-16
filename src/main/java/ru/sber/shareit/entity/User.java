@@ -34,14 +34,4 @@ public class User {
 	private Role role;
 	@Column(name = "city", length = 256)
 	private String city;
-
-
-	public User(Long id, String username, String password, String name, String email, String city) {
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.name = name;
-		this.email = email;
-		this.city = city;
-	}
 }

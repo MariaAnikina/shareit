@@ -15,8 +15,8 @@ public class BookingMapper {
 	public static Booking toBooking(BookingDto bookingDto, User booker, Item item) {
 		return new Booking(
 				bookingDto.getId(),
-				LocalDateTime.parse(bookingDto.getStart(), formatter),
-				LocalDateTime.parse(bookingDto.getEnd(), formatter),
+				bookingDto.getStart(),
+				bookingDto.getEnd(),
 				item,
 				booker,
 				bookingDto.getBookingStatus()
@@ -37,8 +37,8 @@ public class BookingMapper {
 	public static BookingDto toBookingDto(Booking booking) {
 		return new BookingDto(
 				booking.getId(),
-				booking.getStart().toString(),
-				booking.getEnd().toString(),
+				booking.getStart(),
+				booking.getEnd(),
 				booking.getItem().getId(),
 				booking.getBooker().getId(),
 				booking.getBookingStatus()

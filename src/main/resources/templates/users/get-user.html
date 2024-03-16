@@ -14,10 +14,12 @@
     <li>Город: <span th:text="${user.getCity()}"></span></li>
 </ul>
 <br>
-<a th:href="@{/users/update/{userId}(userId=${user.getId()})}">Обновить данные о себе</a> <br>
-<form method="post" th:action="@{/users/delete/{userId}(userId=${user.getId()})}">
-    <input type="hidden" name="_method" value="DELETE"/>
-    <button type="submit">Удалить аккаунт</button>
-</form>
+
+<div th:if="${userId == user.getId()}">
+    <a th:href="@{/users/update}">Обновить данные о себе</a> <br>
+    <form method="post" th:action="@{/users/delete/{userId}(userId=${user.getId()})}">
+        <input type="hidden" name="_method" value="DELETE"/>
+        <button type="submit">Удалить аккаунт</button>
+    </form></div>
 </body>
 </html>

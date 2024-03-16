@@ -3,6 +3,8 @@ package ru.sber.shareit.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +35,9 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<UserInfoDto> getUsers() {
+	public List<UserInfoDto> getUsers(int from, int size) {
 		log.info("Запрошен список пользователей");
-		return userRepository.findAll().stream()
+		return userRepository.findAll(getPageable(from, size)).stream()
 				.sorted(Comparator.comparing(User::getUsername))
 				.map(UserMapper::toUserInfoDto)
 				.collect(Collectors.toList());
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public UserInfoDto getUsersById(Long id) {
+	public UserInfoDto getUserById(Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException("Пользователь с id=" + id + " не найден");
@@ -57,15 +59,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto create(UserDto userDto) {
 		try {
-			User user = toUserNoRole(userDto);
-			if (user.getUsername().equals("moderator")) {
-				user.setRole(Role.ROLE_MODERATOR);
+			if (userDto.getUsername().equals("moderator")) {
+				userDto.setRole("ROLE_MODERATOR");
 			}
 			if (userDto.getRole() == null) {
-				user.setRole(Role.ROLE_USER);
-			} else {
-				user.setRole(Role.valueOf(userDto.getRole()));
+				userDto.setRole("ROLE_USER");
 			}
+			User user = toUser(userDto);
 			String encodedPassword = passwordEncoder.encode(user.getPassword());
 			user.setPassword(encodedPassword);
 			userRepository.save(user);
@@ -100,9 +100,24 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void delete(Long id) {
-		userRepository.deleteById(id);
-		log.info("Удален пользователь с id={}", id);
+	public void delete(Long id,  Long userIdAuth) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (userOptional.isEmpty()) {
+			throw new UserNotFoundException("Пользователь с id=" + id + " не найден");
+		}
+		if (id.equals(userIdAuth)) {
+			userRepository.deleteById(id);
+			log.info("Удален пользователь с id={}", id);
+			return;
+		}
+		Optional<User> userOptionalAuth = userRepository.findById(userIdAuth);
+		if (userOptionalAuth.isEmpty()) {
+			throw new UserNotFoundException("Пользователь с id=" + userIdAuth + " не найден");
+		}
+		if (userOptionalAuth.get().getRole().equals(Role.ROLE_MODERATOR)) {
+			userRepository.deleteById(id);
+			log.info("Удален пользователь с id={}", id);
+		}
 	}
 
 	@Transactional(readOnly = true)
@@ -137,5 +152,10 @@ public class UserServiceImpl implements UserService {
 		if (updateUser.getCity() == null || updateUser.getCity().isBlank()) {
 			updateUser.setCity(oldUser.getCity());
 		}
+	}
+
+	private Pageable getPageable(int from, int size) {
+		int page = from / size;
+		return PageRequest.of(page, size);
 	}
 }

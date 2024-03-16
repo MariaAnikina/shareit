@@ -1,18 +1,24 @@
 package ru.sber.shareit.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.user.UserDto;
+import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.util.UserValidator;
 import ru.sber.shareit.util.group.Create;
 import ru.sber.shareit.util.group.Update;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @AllArgsConstructor
 @RequestMapping("/users")
@@ -24,13 +30,18 @@ public class UserController {
 
 	@GetMapping("/{userId}")
 	public String getUserById(@PathVariable long userId, Model model) {
-		model.addAttribute("user", userService.getUsersById(userId));
+		Long userIdAuth = getUserId();
+		model.addAttribute("userId", userIdAuth);
+		model.addAttribute("user", userService.getUserById(userId));
 		return "users/get-user";
 	}
 
 	@GetMapping
-	public String getUsers(Model model) {
-		model.addAttribute("users", userService.getUsers());
+	public String getUsers(Model model, @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+	@RequestParam(defaultValue = "3") @Positive int size) {
+		model.addAttribute("currentPage", from / size);
+		model.addAttribute("size", size);
+		model.addAttribute("users", userService.getUsers(from, size));
 		return "users/get-users";
 	}
 
@@ -51,18 +62,18 @@ public class UserController {
 		return "redirect:/users";
 	}
 
-	@GetMapping("/update/{userId}")
-	public String updateUserPage(@PathVariable Long userId, Model model) {
-		model.addAttribute("userId", userId);
+	@GetMapping("/update")
+	public String updateUserPage(Model model) {
 		model.addAttribute("user", new UserDto());
 		return "users/update-user";
 	}
 
 
 	@Validated(Update.class)
-	@PutMapping("/update/{userId}")
+	@PutMapping("/update")
 	public String performUpdateUser(@Valid @ModelAttribute("user") UserDto userDto,
-	                                BindingResult bindingResult, @PathVariable Long userId) {
+	                                BindingResult bindingResult) {
+		Long userId = getUserId();
 		userValidator.validate(userDto, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "users/update-user";
@@ -73,7 +84,18 @@ public class UserController {
 
 	@DeleteMapping("/delete/{userId}")
 	public String deleteUser(@PathVariable Long userId) {
-		userService.delete(userId);
+		Long userIdAuth = getUserId();
+		userService.delete(userId, userIdAuth);
 		return "auth/login";
+	}
+
+	private Long getUserId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Long userId = null;
+		if (authentication.getPrincipal() instanceof UserDetails) {
+			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+			userId = userDetails.getUser().getId();
+		}
+		return userId;
 	}
 }

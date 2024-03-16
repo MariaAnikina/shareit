@@ -8,7 +8,7 @@
 <body>
 <div>
     <h1>Обновление пользователя</h1>
-    <form th:method="POST" th:action="@{/users/update/{userId}(userId=${userId})}" th:object="${user}">
+    <form th:method="POST" th:action="@{/users/update}" th:object="${user}">
         <input type="hidden" name="_method" value="PUT"/>
         <label for="username">Введите логин</label>
         <input type="text" th:field="*{username}" id="username"/>

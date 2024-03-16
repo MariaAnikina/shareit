@@ -31,10 +31,10 @@ public class ItemRequestController {
 		Long userId = getUserId();
 		itemRequestValidator.validate(requestDto, bindingResult);
 		if (bindingResult.hasErrors()) {
-			return "redirect:/items/top"; //??
+			return "redirect:/items/top"; // поменять?
 		}
 		itemRequestService.create(userId, requestDto);
-		return "items/get-items-by-text"; // поменять
+		return "redirect:/requests";
 	}
 
 	@GetMapping
@@ -57,12 +57,13 @@ public class ItemRequestController {
 	}
 
 	@GetMapping(path = "/all")
-	public String getAllItemRequests(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
+	public String getAllItemRequests(@RequestParam(required = false) boolean myCity,
+	                                 @RequestParam(defaultValue = "0") @PositiveOrZero int from,
 	                                 @RequestParam(defaultValue = "10") @Positive int size, Model model) {
 		Long userId = getUserId();
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
-		model.addAttribute("requests", itemRequestService.getAllItemRequests(userId, from, size));
+		model.addAttribute("requests", itemRequestService.getAllItemRequests(userId, myCity, from, size));
 		return "requests/get-requests-all";
 	}
 

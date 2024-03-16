@@ -38,14 +38,12 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public BookingDtoFull create(Long userId, BookingDto bookingDto) {
-		LocalDateTime start = convertStringToDatetime(bookingDto.getStart());
-		LocalDateTime end = convertStringToDatetime(bookingDto.getEnd());
 		Optional<User> userOptional = userRepository.findById(userId);
-		if (start.isBefore(LocalDateTime.now()) || end.isBefore(LocalDateTime.now())) {
-			throw new BookingTimeException("Момент начала и окончания бронирования должны быть в будущем");
-		}
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
+		}
+		if (bookingDto.getStart().isBefore(LocalDateTime.now()) || bookingDto.getEnd().isBefore(LocalDateTime.now())) {
+			throw new BookingTimeException("Момент начала и окончания бронирования должны быть в будущем");
 		}
 		Long itemId = bookingDto.getItemId();
 		Optional<Item> itemOptional = itemRepository.findById(itemId);
@@ -59,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
 		if (!item.getAvailable()) {
 			throw new ItemUnavailableException("Вещь с id=" + itemId + " не доступна");
 		}
-		if (!end.isAfter(start)) {
+		if (!bookingDto.getEnd().isAfter(bookingDto.getStart())) {
 			throw new BookingTimeException("Момент окончания бронирования должен быть позже начала");
 		}
 		bookingDto.setBookerId(userId);
@@ -221,15 +219,6 @@ public class BookingServiceImpl implements BookingService {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
 		return state;
-	}
-
-	public LocalDateTime convertStringToDatetime(String dateTimeString) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-		try {
-			return LocalDateTime.parse(dateTimeString, formatter);
-		} catch (DateTimeParseException e) {
-			throw new UnableToConvertStringToDatetimeException("Не удалось распарсить строку " + dateTimeString);
-		}
 	}
 
 	private Pageable getPageable(int from, int size) {

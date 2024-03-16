@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Навигационная панель</title>
+</head>
+<body>
+<nav  th:fragment="navbar" class="navbar">
+  <ul>
+    <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
+    <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+    <li><a th:href="@{/items/owner}">Мои вещи</a></li>
+    <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+    <li><a th:href="@{/templates/bookings}">Я забронировал</a></li>
+    <li><a th:href="@{/templates/requests}">Мои запросы</a></li>
+    <li><a th:href="@{/requests/all}">Все запросы</a></li>
+    <form th:action="@{/logout}" th:method="POST">
+      <input type="submit" value="Выйти">
+    </form>
+  </ul>
+</nav>
+</body>
+</html>

@@ -13,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "item_requests")
+@Entity
+@Table(name = "item_requests")
 public class ItemRequest {
 	@Id
 	@Column(name = "item_request_id")

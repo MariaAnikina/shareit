@@ -27,7 +27,6 @@ public class UserDto {
 	@NotBlank(message = "Email пользователя не может быть пустым", groups = {Create.class})
 	@Email(message = "Email пользователя должен быть корректным", groups = {Create.class, Update.class})
 	private String email;
-//	@NotNull(message = "Роль должна быть заполнена", groups = {Create.class})
 	private String role;
 	@NotBlank(message = "Город проживания пользователя не может быть пустым", groups = {Create.class})
 	private String city;

@@ -7,13 +7,25 @@
 </head>
 <body>
 <nav>
+
     <form action="/items/search" method="get">
         <input type="text" name="text" />
         <button type="submit">Найти</button>
     </form> <br>
-
+    <ul>
+        <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
+        <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+        <li><a th:href="@{/items/owner}">Мои вещи</a></li>
+        <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+        <li><a th:href="@{/bookings/}">Я забронировал</a></li>
+        <li><a th:href="@{/requests/}">Мои запросы</a></li>
+        <li><a th:href="@{/requests/all}">Все запросы</a></li>
+        <form th:action="@{/logout}" th:method="POST">
+            <input type="submit" value="Выйти">
+        </form>
+    </ul>
 </nav>
-<h2>Актуально</h2>
+<h2>В моем городе делятся</h2>
 <ul>
     <li th:each="item : ${items}">
         <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
@@ -21,8 +33,8 @@
 </ul>
 
 <div>
-    <a th:if="${currentPage > 0}" th:href="@{/items/city(from=${currentPage * size - size}, size=${size})}">Previous</a>
-    <a th:if="${items.size() == size}" th:href="@{/items/city(from=${currentPage * size + size}, size=${size})}">Next</a>
+    <a th:if="${currentPage > 0}" th:href="@{/items/city(from=${currentPage * size - size}, size=${size})}">Предыдущая</a>
+    <a th:if="${items.size() == size}" th:href="@{/items/city(from=${currentPage * size + size}, size=${size})}">Следующая</a>
 </div>
 </body>
 </html>

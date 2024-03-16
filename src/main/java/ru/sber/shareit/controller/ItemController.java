@@ -30,7 +30,6 @@ import javax.validation.constraints.PositiveOrZero;
 public class ItemController {
 	private final ItemService itemService;
 	private final ItemValidator itemValidator;
-
 	private final CommentValidator commentValidator;
 
 	@GetMapping("/create")
@@ -39,7 +38,7 @@ public class ItemController {
 	}
 
 	@PostMapping("/create")
-	public String performCreateItem(@ModelAttribute("item") ItemDto itemDto,
+	public String performCreateItem(@Valid @ModelAttribute("item") ItemDto itemDto,
 	                                BindingResult bindingResult) {
 		Long userId = getUserId();
 		itemValidator.validate(itemDto, bindingResult);

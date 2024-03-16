@@ -41,9 +41,8 @@ public class ItemServiceImpl implements ItemService {
 	private final ItemRequestRepository itemRequestRepository;
 	private static final String API_KEY_WEATHER = "0559176db0fdda660a02176fe8a89461";
 
-
-
 	@Override
+	@Transactional
 	public ItemDto create(Long userId, ItemDto itemDto) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		if (userOptional.isEmpty()) {
@@ -109,6 +108,7 @@ public class ItemServiceImpl implements ItemService {
 				.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<ItemDto> getItemsInYourCity(Long userId, int from, int size) {
 		Optional<User> userOptional = userRepository.findById(userId);
@@ -122,6 +122,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	@Transactional
 	public ItemDto update(Long userId, ItemDto itemDto) {
 		Long itemId = itemDto.getId();
 		Optional<Item> itemOptional = itemRepository.findById(itemId);
@@ -161,6 +162,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Long userId, Long itemId) {
 		if (!userRepository.existsById(userId)) {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
@@ -189,6 +191,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	@Transactional
 	public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
 		Optional<User> authorOptional = userRepository.findById(userId);
 		if (authorOptional.isEmpty()) {
@@ -209,6 +212,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ItemDto> getItemsByTemperatureIntervalInYourCity(Long userId, int from, int size) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		if (userOptional.isEmpty()) {

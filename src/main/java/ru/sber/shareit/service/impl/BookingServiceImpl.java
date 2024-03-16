@@ -36,6 +36,7 @@ public class BookingServiceImpl implements BookingService {
 	private final UserRepository userRepository;
 	private final ItemRepository itemRepository;
 
+	@Transactional
 	@Override
 	public BookingDtoFull create(Long userId, BookingDto bookingDto) {
 		Optional<User> userOptional = userRepository.findById(userId);
@@ -69,6 +70,7 @@ public class BookingServiceImpl implements BookingService {
 		return toBookingDtoFull(booking);
 	}
 
+	@Transactional
 	@Override
 	public BookingDtoFull approveBooking(Long userId, Long bookingId, boolean approved) {
 		Optional<Booking> bookingOptional = bookingRepository.findByIdAndItemOwnerId(bookingId, userId);

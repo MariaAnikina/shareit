@@ -6,9 +6,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.booking.BookingDto;
+import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.BookingService;
 
@@ -25,8 +27,12 @@ public class BookingController {
 
 	@PostMapping("/create/{itemId}")
 	public String performCreateItem(@Valid @ModelAttribute("booking") BookingDto bookingDto,
+	                                BindingResult bindingResult,
 	                                @PathVariable Long itemId) {
 		Long userId = getUserId();
+		if (bindingResult.hasErrors()) {
+			return "items/get-item-by-id";
+		}
 		bookingService.create(userId, bookingDto);
 		return "redirect:/items/" + itemId;
 	}

@@ -1,4 +1,4 @@
-package ru.sber.shareit.entity.enams;
+package ru.sber.shareit.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

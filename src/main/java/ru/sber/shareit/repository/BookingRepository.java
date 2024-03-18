@@ -3,7 +3,7 @@ package ru.sber.shareit.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.sber.shareit.entity.Booking;
-import ru.sber.shareit.entity.enams.BookingStatus;
+import ru.sber.shareit.entity.enums.BookingStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Страница ошибки</title>
+</head>
+<body>
+<h2>Ошибка!</h2>
+Описание ошибки: <span th:text="${response.getError()}"></span><br>
+Статус ответа: <span th:text="${response.getHttpStatus()}"></span><br>
+</body>
+</html>

@@ -26,7 +26,6 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/items")
-@Validated
 public class ItemController {
 	private final ItemService itemService;
 	private final ItemValidator itemValidator;
@@ -41,12 +40,12 @@ public class ItemController {
 	public String performCreateItem(@Valid @ModelAttribute("item") ItemDto itemDto,
 	                                BindingResult bindingResult) {
 		Long userId = getUserId();
-		itemValidator.validate(itemDto, bindingResult);
+//		itemValidator.validate(itemDto, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "items/create-item";
 		}
 		itemService.create(userId, itemDto);
-		return "redirect:/users";
+		return "redirect:/items/owner";
 	}
 
 	@GetMapping("/{itemId}")

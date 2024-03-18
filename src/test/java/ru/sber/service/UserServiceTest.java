@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.dto.user.UserInfoDto;
 import ru.sber.shareit.entity.User;
-import ru.sber.shareit.entity.enams.Role;
+import ru.sber.shareit.entity.enums.Role;
 import ru.sber.shareit.exception.UserAlreadyExistsException;
 import ru.sber.shareit.exception.UserNotFoundException;
 import ru.sber.shareit.repository.UserRepository;

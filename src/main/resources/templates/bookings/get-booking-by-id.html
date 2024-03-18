@@ -11,6 +11,10 @@
 Начало бронирования: <span th:text="${booking.getStart()}"></span><br>
 Окончание бронирования: <span th:text="${booking.getEnd()}"></span><br>
 Статус бронирования: <span th:text="${booking.getBookingStatus()}"></span>
+<div th:if="${booking.getItem().getOwnerId() != userId}">
+    <a th:href="@{/users/{userId}(userId=${booking.getItem().getOwnerId()})}">Данные о хозяине</a>
+</div>
+
 <div th:if="${booking.getItem().getOwnerId() == userId}">
     <form method="post" th:action="@{/bookings/{bookingId}(bookingId=${booking.getId()}, approved=true)}">
         <input type="hidden" name="_method" value="PATCH"/>

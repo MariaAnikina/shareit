@@ -21,7 +21,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Controller
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
-@Validated
 public class ItemRequestController {
 	private final ItemRequestService itemRequestService;
 	private final ItemRequestValidator itemRequestValidator;

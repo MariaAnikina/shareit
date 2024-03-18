@@ -21,7 +21,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Controller
 @RequestMapping("/bookings")
 @RequiredArgsConstructor
-@Validated
 public class BookingController {
 	private final BookingService bookingService;
 

@@ -1,9 +1,6 @@
 package ru.sber.shareit.dto.item;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.sber.shareit.dto.booking.BookingDto;
 
 import javax.validation.constraints.NotBlank;
@@ -14,13 +11,13 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ItemDto {
 	private Long id;
 	@NotBlank(message = "Имя вещи не может быть пустым")
 	private String name;
 	@NotBlank(message = "Описание вещи не может быть пустым")
 	private String description;
-	@NotNull(message = "Должна быть указана доступность вещи")
 	private Boolean available;
 	private Long ownerId;
 	private Long requestId;

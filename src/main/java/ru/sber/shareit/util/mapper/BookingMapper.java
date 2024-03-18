@@ -6,7 +6,6 @@ import ru.sber.shareit.entity.Booking;
 import ru.sber.shareit.entity.Item;
 import ru.sber.shareit.entity.User;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class BookingMapper {
@@ -28,7 +27,7 @@ public class BookingMapper {
 				booking.getId(),
 				booking.getStart(),
 				booking.getEnd(),
-				ItemMapper.itemToDto(booking.getItem(), null, null, null),
+				ItemMapper.toItemDto(booking.getItem(), null, null, null),
 				UserMapper.toUserDto(booking.getBooker()),
 				booking.getBookingStatus()
 		);

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.sber.shareit.entity.enams.TemperatureIntervals;
+import ru.sber.shareit.entity.enums.TemperatureIntervals;
 
 import javax.persistence.*;
 

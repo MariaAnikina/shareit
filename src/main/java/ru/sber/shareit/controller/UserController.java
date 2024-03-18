@@ -23,13 +23,12 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @RequestMapping("/users")
 @Controller
-@Validated
 public class UserController {
 	private final UserService userService;
 	private final UserValidator userValidator;
 
 	@GetMapping("/{userId}")
-	public String getUserById(@PathVariable long userId, Model model) {
+	public String getUserById(@PathVariable Long userId, Model model) {
 		Long userIdAuth = getUserId();
 		model.addAttribute("userId", userIdAuth);
 		model.addAttribute("user", userService.getUserById(userId));
@@ -50,13 +49,12 @@ public class UserController {
 		return "users/create-user";
 	}
 
-	@Validated(Create.class)
 	@PostMapping("/create")
 	public String performCreateUser(@Valid @ModelAttribute("user") UserDto userDto,
 	                                  BindingResult bindingResult) {
-		userValidator.validate(userDto, bindingResult);
+//		userValidator.validate(userDto, bindingResult);
 		if (bindingResult.hasErrors()) {
-			return "/auth/registration";
+			return "users/create-user";
 		}
 		userService.create(userDto);
 		return "redirect:/users";

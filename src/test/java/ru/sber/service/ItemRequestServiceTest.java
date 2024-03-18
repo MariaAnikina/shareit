@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.sber.shareit.dto.request.ItemRequestDto;
 import ru.sber.shareit.entity.ItemRequest;
 import ru.sber.shareit.entity.User;
-import ru.sber.shareit.entity.enams.Role;
+import ru.sber.shareit.entity.enums.Role;
 import ru.sber.shareit.exception.ItemRequestNotFoundException;
 import ru.sber.shareit.exception.UserNotFoundException;
 import ru.sber.shareit.repository.ItemRepository;
@@ -18,7 +18,6 @@ import ru.sber.shareit.repository.ItemRequestRepository;
 import ru.sber.shareit.repository.UserRepository;
 import ru.sber.shareit.service.impl.ItemRequestServiceImpl;
 
-import java.awt.print.Pageable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

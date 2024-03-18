@@ -7,7 +7,7 @@ import ru.sber.shareit.entity.User;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import static ru.sber.shareit.util.mapper.ItemMapper.itemToDto;
+import static ru.sber.shareit.util.mapper.ItemMapper.toItemDto;
 
 public class ItemRequestMapper {
 	public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
@@ -18,7 +18,7 @@ public class ItemRequestMapper {
 				(itemRequest.getItems() == null) ?
 						Collections.emptyList() :
 						itemRequest.getItems().stream()
-								.map(item -> itemToDto(item, null, null, null))
+								.map(item -> toItemDto(item, null, null, null))
 								.collect(Collectors.toList())
 		);
 	}

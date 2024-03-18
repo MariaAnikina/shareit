@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.dto.user.UserDto;
-import ru.sber.shareit.entity.enams.BookingStatus;
+import ru.sber.shareit.entity.enums.BookingStatus;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;

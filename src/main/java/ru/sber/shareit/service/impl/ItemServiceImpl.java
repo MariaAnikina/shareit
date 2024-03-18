@@ -2,6 +2,7 @@ package ru.sber.shareit.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.entity.*;
-import ru.sber.shareit.entity.enams.BookingStatus;
-import ru.sber.shareit.entity.enams.TemperatureIntervals;
+import ru.sber.shareit.entity.enums.BookingStatus;
+import ru.sber.shareit.entity.enums.TemperatureIntervals;
 import ru.sber.shareit.exception.*;
 import ru.sber.shareit.repository.*;
 import ru.sber.shareit.service.ItemService;
@@ -23,10 +24,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.sber.shareit.util.mapper.CommentMapper.commentFromDto;
-import static ru.sber.shareit.util.mapper.CommentMapper.commentToDto;
-import static ru.sber.shareit.util.mapper.ItemMapper.itemFromDto;
-import static ru.sber.shareit.util.mapper.ItemMapper.itemToDto;
+import static ru.sber.shareit.util.mapper.CommentMapper.toComment;
+import static ru.sber.shareit.util.mapper.CommentMapper.toCommentDto;
+import static ru.sber.shareit.util.mapper.ItemMapper.toItem;
+import static ru.sber.shareit.util.mapper.ItemMapper.toItemDto;
 
 @Slf4j
 @Service
@@ -39,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
 	private final CommentRepository commentRepository;
 	private final TemperatureMapper temperatureMapper;
 	private final ItemRequestRepository itemRequestRepository;
-	private static final String API_KEY_WEATHER = "0559176db0fdda660a02176fe8a89461";
+	private static final String API_KEY_WEATHER = "0559176db0fdda660a02176fe8a89461"; //в проперти????
 
 	@Override
 	@Transactional
@@ -53,17 +54,20 @@ public class ItemServiceImpl implements ItemService {
 		Long requestId = itemDto.getRequestId();
 		if (requestId != null) {
 			Optional<ItemRequest> itemRequestOptional = itemRequestRepository.findById(requestId);
-			if (itemRequestOptional.isEmpty())
+			if (itemRequestOptional.isEmpty()) {
 				throw new ItemRequestNotFoundException("Запрос с id=" + requestId + " не найден");
+			}
 			itemRequest = itemRequestOptional.get();
 		}
 		User user = userOptional.get();
-		itemDto.setCity(user.getCity());
+		if (itemDto.getCity() == null) {
+			itemDto.setCity(user.getCity());
+		}
 		Item item = itemRepository.save(
-				itemFromDto(itemDto, user, itemRequest)
+				toItem(itemDto, user, itemRequest)
 		);
 		log.info("Добавлена вещь {}", item);
-		return itemToDto(item, null, null, null);
+		return toItemDto(item, null, null, null);
 	}
 
 	@Override
@@ -90,10 +94,10 @@ public class ItemServiceImpl implements ItemService {
 			);
 		}
 		List<CommentDto> comments = commentRepository.findByItemIdOrderByCreatedDesc(itemId).stream()
-				.map(comment -> commentToDto(comment, comment.getAuthor().getName()))
+				.map(comment -> toCommentDto(comment, comment.getAuthor().getName()))
 				.collect(Collectors.toList());
 		log.info("Запрошена вещь {}", item);
-		return itemToDto(item, last, next, comments);
+		return toItemDto(item, last, next, comments);
 	}
 
 	@Override
@@ -104,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
 		}
 		log.info("Запрошен список вещей пользователя с id={}", userId);
 		return itemRepository.findByOwnerId(userId, getPageable(from, size)).stream()
-				.map(this::toItemDto)
+				.map(this::ItemToItemDto)
 				.collect(Collectors.toList());
 	}
 
@@ -135,8 +139,15 @@ public class ItemServiceImpl implements ItemService {
 			throw new ItemOwnerException("Пользователь с id=" + userId + " не владеет вещью с id=" + itemId);
 		}
 		ItemRequest itemRequest = null;
-
-		Item updateItem = itemFromDto(itemDto, owner, itemRequest);
+		Long requestId = itemDto.getRequestId();
+		if (requestId != null) {
+			Optional<ItemRequest> itemRequestOptional = itemRequestRepository.findById(requestId);
+			if (itemRequestOptional.isEmpty()){
+				throw new ItemRequestNotFoundException("Запрос с id=" + requestId + " не найден");
+			}
+			itemRequest = itemRequestOptional.get();
+		}
+		Item updateItem = toItem(itemDto, owner, itemRequest);
 
 		String name = updateItem.getName();
 		String description = updateItem.getDescription();
@@ -158,7 +169,7 @@ public class ItemServiceImpl implements ItemService {
 		updateItem.setCity(oldItem.getCity());
 		Item item = itemRepository.save(updateItem);
 		log.info("Обновлена вещь {}", item);
-		return itemToDto(item, null, null, null);
+		return toItemDto(item, null, null, null);
 	}
 
 	@Override
@@ -186,7 +197,7 @@ public class ItemServiceImpl implements ItemService {
 		}
 		log.info("Запрошен поиск по тексту '{}'", text);
 		return itemRepository.findByText(text, getPageable(from, size)).stream()
-				.map(item -> itemToDto(item, null, null, null))
+				.map(item -> toItemDto(item, null, null, null))
 				.collect(Collectors.toList());
 	}
 
@@ -206,9 +217,9 @@ public class ItemServiceImpl implements ItemService {
 		if (!bookingRepository.existsByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now())) {
 			throw new BookingEndTimeException("Бронирование еще не завершилось");
 		}
-		Comment comment = commentRepository.save(commentFromDto(commentDto, item, author));
+		Comment comment = commentRepository.save(toComment(commentDto, item, author));
 		log.info("Добавлен комментарий '{}'", comment);
-		return commentToDto(comment, author.getName());
+		return toCommentDto(comment, author.getName());
 	}
 
 	@Override
@@ -221,7 +232,7 @@ public class ItemServiceImpl implements ItemService {
 		String city = userOptional.get().getCity();
 		RestTemplate restTemplate =  new RestTemplate();
 		String body = restTemplate.getForEntity(
-				"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY_WEATHER,
+				"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY_WEATHER, //ссылка спрятать
 				String.class
 		).getBody();
 		TemperatureIntervals temperatureInterval = temperatureMapper.getTemperatureInCelsiusFromString(body);
@@ -242,9 +253,9 @@ public class ItemServiceImpl implements ItemService {
 		return PageRequest.of(page, size);
 	}
 
-	private ItemDto toItemDto(Item item) {
+	private ItemDto ItemToItemDto(Item item) {
 		LocalDateTime now = LocalDateTime.now();
-		return itemToDto(
+		return toItemDto(
 				item,
 				bookingRepository.findFirstByItemIdAndBookingStatusNotAndStartBeforeOrderByStartDesc(
 						item.getId(),
@@ -258,18 +269,18 @@ public class ItemServiceImpl implements ItemService {
 
 				),
 				commentRepository.findByItemIdOrderByCreatedDesc(item.getId()).stream()
-						.map(comment -> commentToDto(comment, comment.getAuthor().getName()))
+						.map(comment -> toCommentDto(comment, comment.getAuthor().getName()))
 						.collect(Collectors.toList())
 		);
 	}
 
 	private ItemDto toItemDtoInfo(Item item) {
-		return itemToDto(
+		return toItemDto(
 				item,
 				null,
 				null,
 				commentRepository.findByItemIdOrderByCreatedDesc(item.getId()).stream()
-						.map(comment -> commentToDto(comment, comment.getAuthor().getName()))
+						.map(comment -> toCommentDto(comment, comment.getAuthor().getName()))
 						.collect(Collectors.toList())
 		);
 	}

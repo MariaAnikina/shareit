@@ -1,4 +1,4 @@
-package ru.sber.shareit.entity.enams;
+package ru.sber.shareit.entity.enums;
 
 public enum Role {
 	ROLE_USER,

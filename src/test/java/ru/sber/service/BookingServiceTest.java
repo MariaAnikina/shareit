@@ -14,9 +14,9 @@ import ru.sber.shareit.dto.booking.BookingDtoFull;
 import ru.sber.shareit.entity.Booking;
 import ru.sber.shareit.entity.Item;
 import ru.sber.shareit.entity.User;
-import ru.sber.shareit.entity.enams.BookingStatus;
-import ru.sber.shareit.entity.enams.Role;
-import ru.sber.shareit.entity.enams.TemperatureIntervals;
+import ru.sber.shareit.entity.enums.BookingStatus;
+import ru.sber.shareit.entity.enums.Role;
+import ru.sber.shareit.entity.enums.TemperatureIntervals;
 import ru.sber.shareit.exception.*;
 import ru.sber.shareit.repository.BookingRepository;
 import ru.sber.shareit.repository.ItemRepository;
@@ -529,8 +529,9 @@ public class BookingServiceTest {
 				.thenReturn(true);
 		Mockito
 				.when(
-						bookingRepository.findByItemOwnerIdOrderByStartDesc(
+						bookingRepository.findByItemOwnerIdAndStartAfterOrderByStartDesc(
 								anyLong(),
+								any(LocalDateTime.class),
 								any(Pageable.class))
 				)
 				.thenReturn(List.of(

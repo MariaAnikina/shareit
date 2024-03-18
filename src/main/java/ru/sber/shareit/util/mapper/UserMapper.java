@@ -2,7 +2,7 @@ package ru.sber.shareit.util.mapper;
 
 import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.dto.user.UserInfoDto;
-import ru.sber.shareit.entity.enams.Role;
+import ru.sber.shareit.entity.enums.Role;
 import ru.sber.shareit.entity.User;
 
 public class UserMapper {

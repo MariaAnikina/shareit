@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.sber.shareit.entity.Item;
-import ru.sber.shareit.entity.enams.TemperatureIntervals;
+import ru.sber.shareit.entity.enums.TemperatureIntervals;
 
 import java.util.List;
 

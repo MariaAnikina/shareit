@@ -6,24 +6,45 @@
     <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
 </head>
 <body>
-<h2>Данные о бронировании</h2>
+<nav class="navbar">
+    <form action="/items/search" method="get">
+        <input type="text" name="text" />
+        <button type="submit">Найти</button>
+    </form> <br>
+    <ul>
+        <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
+        <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+        <li><a th:href="@{/items/owner}">Мои вещи</a></li>
+        <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+        <li><a th:href="@{/bookings/}">Я забронировал</a></li>
+        <li><a th:href="@{/requests/}">Мои запросы</a></li>
+        <li><a th:href="@{/requests/all}">Все запросы</a></li>
+        <form th:action="@{/logout}" th:method="POST">
+            <input type="submit" value="Выйти">
+        </form>
+    </ul>
+</nav>
+<div class="container">
+    <div>
+        <h4>Данные о бронировании</h4>
+        Начало бронирования: <span th:text="${booking.getStart()}"></span><br>
+        Окончание бронирования: <span th:text="${booking.getEnd()}"></span><br>
+        Статус бронирования: <span th:text="${booking.getBookingStatus()}"></span>
+    </div>
+    <div th:if="${booking.getItem().getOwnerId() != userId}">
+        <a th:href="@{/users/{userId}(userId=${booking.getItem().getOwnerId()})}">Данные о хозяине</a>
+    </div>
 
-Начало бронирования: <span th:text="${booking.getStart()}"></span><br>
-Окончание бронирования: <span th:text="${booking.getEnd()}"></span><br>
-Статус бронирования: <span th:text="${booking.getBookingStatus()}"></span>
-<div th:if="${booking.getItem().getOwnerId() != userId}">
-    <a th:href="@{/users/{userId}(userId=${booking.getItem().getOwnerId()})}">Данные о хозяине</a>
-</div>
-
-<div th:if="${booking.getItem().getOwnerId() == userId}">
-    <form method="post" th:action="@{/bookings/{bookingId}(bookingId=${booking.getId()}, approved=true)}">
-        <input type="hidden" name="_method" value="PATCH"/>
-        <button type="submit">Подтвердить бронирование</button>
-    </form>
-    <form method="post" th:action="@{/bookings/{bookingId}(bookingId=${booking.getId()})(approved=false)}">
-        <input type="hidden" name="_method" value="PATCH"/>
-        <button type="submit">Отклонить бронирование</button>
-    </form>
+    <div th:if="${booking.getItem().getOwnerId() == userId}">
+        <form method="post" th:action="@{/bookings/{bookingId}(bookingId=${booking.getId()}, approved=true)}">
+            <input type="hidden" name="_method" value="PATCH"/>
+            <button type="submit">Подтвердить бронирование</button>
+        </form>
+        <form method="post" th:action="@{/bookings/{bookingId}(bookingId=${booking.getId()}, approved=false)}">
+            <input type="hidden" name="_method" value="PATCH"/>
+            <button type="submit">Отклонить бронирование</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

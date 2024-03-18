@@ -7,26 +7,49 @@
 </head>
 <body>
 <div>
-    <h2>Создать запрос на вещь</h2>
-    <form th:action="@{/requests}" method="post" th:object="${request}">
-        <label for="description">Введите название вещи, которую хотите найти</label>
-        <input type="text" th:field="*{description}" id="description"/>
-        <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
-            Описание запроса не может быть пустым
-        </div>
-        <button type="submit">Создать запрос</button>
-    </form>
-</div>
-<h2>Результаты поиска по запросу</h2>
-<ul>
-  <li th:each="item : ${items}">
-    <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
-  </li>
-</ul>
+    <nav class="navbar">
+        <form action="/items/search" method="get">
+            <input type="text" name="text"/>
+            <button type="submit">Найти</button>
+        </form>
+        <br>
+        <ul>
+            <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
+            <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+            <li><a th:href="@{/items/owner}">Мои вещи</a></li>
+            <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+            <li><a th:href="@{/bookings/}">Я забронировал</a></li>
+            <li><a th:href="@{/requests/}">Мои запросы</a></li>
+            <li><a th:href="@{/requests/all}">Все запросы</a></li>
+            <form th:action="@{/logout}" th:method="POST">
+                <input type="submit" value="Выйти">
+            </form>
+        </ul>
+    </nav>
+    <div class="container">
+        <h4>Создать запрос на вещь</h4>
+        <form th:action="@{/requests}" method="post" th:object="${request}">
+            <label for="description">Введите название вещи, которую хотите найти</label>
+            <input type="text" th:field="*{description}" id="description"/>
+            <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                Описание запроса не может быть пустым
+            </div>
+            <button type="submit">Создать запрос</button>
+        </form>
+    </div>
+    <h4>Результаты поиска по запросу</h4>
+    <ul>
+        <li th:each="item : ${items}">
+            <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
+        </li>
+    </ul>
 
-<div>
-  <a th:if="${currentPage > 0}" th:href="@{/items/search(text=${text}, from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
-  <a th:if="${items.size() == size}" th:href="@{/items/search(text=${text}, from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
+    <a th:if="${currentPage > 0}"
+       th:href="@{/items/search(text=${text}, from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
+    <a th:if="${items.size() == size}"
+       th:href="@{/items/search(text=${text}, from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
+
 </div>
+
 </body>
 </html>

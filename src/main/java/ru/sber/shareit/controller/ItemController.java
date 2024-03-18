@@ -22,6 +22,7 @@ import ru.sber.shareit.util.ItemValidator;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.time.format.DateTimeFormatter;
 
 @RequiredArgsConstructor
 @Controller
@@ -40,7 +41,6 @@ public class ItemController {
 	public String performCreateItem(@Valid @ModelAttribute("item") ItemDto itemDto,
 	                                BindingResult bindingResult) {
 		Long userId = getUserId();
-//		itemValidator.validate(itemDto, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "items/create-item";
 		}
@@ -51,10 +51,14 @@ public class ItemController {
 	@GetMapping("/{itemId}")
 	public String getItemById(@PathVariable Long itemId, Model model) {
 		Long userId = getUserId();
-		model.addAttribute("item", itemService.getItemById(userId, itemId));
+		ItemDto itemById = itemService.getItemById(userId, itemId);
+		model.addAttribute("userId", getUserId());
+		model.addAttribute("item", itemById);
 		model.addAttribute("itemId", itemId);
 		model.addAttribute("comment", new CommentDto());
 		model.addAttribute("booking", new BookingDto());
+		model.addAttribute("format", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
 		return "items/get-item-by-id";
 	}
 
@@ -97,10 +101,6 @@ public class ItemController {
 	public String performUpdateUser(@ModelAttribute("item") ItemDto itemDto,
 	                                BindingResult bindingResult, @PathVariable Long itemId) {
 		Long userId = getUserId();
-		itemValidator.validate(itemDto, bindingResult);
-		if (bindingResult.hasErrors()) {
-			return "items/update-item";
-		}
 		itemDto.setId(itemId);
 		itemService.update(userId, itemDto);
 		return "redirect:/items/top";

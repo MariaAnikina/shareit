@@ -6,43 +6,95 @@
     <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}">
 </head>
 <body>
-<h2>Данные о вещи</h2>
-
-Название: <span th:text="${item.getName()}"></span><br>
-Описание: <span th:text="${item.getDescription()}"></span><br>
-Доступна: <span th:text="${item.getAvailable()}"></span><br>
-Город: <span th:text="${item.getCity()}"></span><br>
-
-<div>
-    <h1> Подать запрос на бронирование</h1>
-    <form th:method="POST" th:action="@{/bookings/create/{itemId}(itemId=${itemId})}" th:object="${booking}">
-        <div><label for="start">Начало бронирования:</label>
-            <input type="datetime-local" id="start" name="start" th:field="*{start}" required></div>
-        <div><label for="end">Окончание бронирования:</label>
-            <input type="datetime-local" id="end" name="end" th:field="*{end}" required></div>
-        <input type="submit" value="Создать"/>
+<nav class="navbar">
+    <form action="/items/search" method="get">
+        <input type="text" name="text"/>
+        <button type="submit">Найти</button>
     </form>
-</div>
-
-<h2>Комментарии могут оставлять только пользователи, которые пользовались этой вещью</h2>
-<form th:action="@{/items/comment/{itemId}(itemId=${itemId})}" method="post" th:object="${comment}">
-    <label for="text">Введите комментарий</label>
-    <input type="text" th:field="*{text}" id="text"/>
-    <div style="color: red" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">
-        Комментарий не может быть пустым
-    </div>
-    <button type="submit">Публиковать</button>
-</form>
-
-<h2>Комментарии:</h2>
-<div th:each="comment : ${item.getComments()}">
+    <br>
+    <ul>
+        <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
+        <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+        <li><a th:href="@{/items/owner}">Мои вещи</a></li>
+        <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+        <li><a th:href="@{/bookings/}">Я забронировал</a></li>
+        <li><a th:href="@{/requests/}">Мои запросы</a></li>
+        <li><a th:href="@{/requests/all}">Все запросы</a></li>
+        <form th:action="@{/logout}" th:method="POST">
+            <input type="submit" value="Выйти">
+        </form>
+    </ul>
+</nav>
+<div class="container">
     <div>
-        <p th:text="${comment.getText()}"></p>
-        <p>Автор: <span th:text="${comment.getAuthorName()}"></span></p>
-        <p>Дата: <span th:text="${comment.getCreated()}"></span></p>
+        <h4>Данные о вещи</h4>
+        Название: <span th:text="${item.getName()}"></span><br>
+        Описание: <span th:text="${item.getDescription()}"></span><br>
+        Доступна: <span th:text="${item.getAvailable()}"></span><br>
+        Город: <span th:text="${item.getCity()}"></span><br>
     </div>
-</div>
+    <div th:if="${userId != item.getOwnerId()}">
+        <h4> Подать запрос на бронирование</h4>
+        <form th:method="POST" th:action="@{/bookings/create/{itemId}(itemId=${itemId})}" th:object="${booking}">
+            <div><label for="start">Начало бронирования:</label>
+                <input type="datetime-local" id="start" name="start" th:field="*{start}" required></div>
+            <div><label for="end">Окончание бронирования:</label>
+                <input type="datetime-local" id="end" name="end" th:field="*{end}" required></div>
+            <input type="submit" value="Создать"/>
+        </form>
+    </div>
+    <div>
+        <h4>Информация о бронировании</h4>
+        <div th:if="${item.getLastBooking() == null && item.getNextBooking() == null}"> Пока никакой информации нет
+        </div>
+        <div th:if="${item.getLastBooking() != null}">
+           <h5>Предыдущее последнее бронирование: </h5> <br>* начало
+            <p th:text="${item.getLastBooking().getStart().format(format)}"></p>  <br>
+            * окончание <p th:text="${item.getLastBooking().getStart().format(format)}"></p>
+            <div th:if="${userId == item.getOwnerId()}">
+                * забронировал вещь пользователь с id:<a
+                    th:href="@{/users/{userId}(userId=${item.getLastBooking().getBookerId()})}"><p
+                    th:text="${item.getLastBooking().getBookerId()}"></a> <br><br>
+                * статус бронирования <p th:text="${item.getLastBooking().getBookingStatus()}"></p>
+            </div>
+        </div>
+        <div th:if="${item.getNextBooking() != null}">
+           <h5> Следующее первое бронирование: </h5>  <br>* начало
+            <p th:text="${item.getNextBooking().getStart().format(format)}"></p>  <br>
+            * окончание <p th:text="${item.getNextBooking().getStart().format(format)}"></p>
+            <div th:if="${userId == item.getOwnerId()}">
+                * забронировал вещь пользователь с id:<a
+                    th:href="@{/users/{userId}(userId=${item.getNextBooking().getBookerId()})}"><p
+                    th:text="${item.getNextBooking().getBookerId()}"></a> <br><br>
+                * статус бронирования <p th:text="${item.getNextBooking().getBookingStatus()}"></p>
+            </div>
+        </div>
+    </div>
+    <div th:if="${userId == item.getOwnerId()}">
+        <a th:href="@{/items/update/{itemId}(itemId=${item.getId()})}">Обновить вещь</a> <br>
+        <form method="post" th:action="@{/items/delete/{itemId}(itemId=${item.getId()})}">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <button type="submit">Удалить вещь</button>
+        </form>
+    </div>
+    <div>
+        <h4> Вы можете оставить комментарий, если пользовались этой вещью</h4>
+        <form th:action="@{/items/comment/{itemId}(itemId=${itemId})}" method="post" th:object="${comment}">
+            <label for="text">Введите комментарий</label>
+            <input type="text" th:field="*{text}" id="text"/>
+            <button type="submit">Публиковать</button>
+        </form>
+        <h4>Комментарии:</h4>
+        <div th:if="${item.getComments().size() == 0}"> Пока пусто(</div>
 
+        <div th:each="comment : ${item.getComments()}">
+            <p th:text="${comment.getText()}"></p>
+            <p>Автор: <span th:text="${comment.getAuthorName()}"></span></p>
+            <p>Дата: <span th:text="${comment.getCreated()}"></span></p>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>

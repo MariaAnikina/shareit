@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
 </head>
 <body>
-<div style="text-align:center">
+<div>
     <h1>Создать вещь</h1>
     <form th:method="POST" th:action="@{/items/create}" th:object="${item}">
         <label for="name">Введите название вещи</label>

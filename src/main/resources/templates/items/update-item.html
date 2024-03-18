@@ -6,8 +6,9 @@
   <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
 </head>
 <body>
-<h1>Создать вещь</h1>
+<h1>Обновить вещь</h1>
 <form th:method="POST" th:action="@{/items/update/{itemId}(itemId=${itemId})}" th:object="${item}">
+  Обновятся только заполненные поля
     <input type="hidden" name="_method" value="PUT"/>
   <label for="name">Введите название вещи</label>
   <input type="text" th:field="*{name}" id="name"/>

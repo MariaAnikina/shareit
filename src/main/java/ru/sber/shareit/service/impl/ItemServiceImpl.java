@@ -2,7 +2,6 @@ package ru.sber.shareit.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -78,21 +77,17 @@ public class ItemServiceImpl implements ItemService {
 			throw new ItemNotFoundException("Вещь с id=" + itemId + " не найдена");
 		}
 		Item item = itemOptional.get();
-		Booking last = null;
-		Booking next = null;
-		if (item.getOwner().getId().equals(userId)) {
-			LocalDateTime now = LocalDateTime.now();
-			last = bookingRepository.findFirstByItemIdAndBookingStatusNotAndStartBeforeOrderByStartDesc(
-					itemId,
-					BookingStatus.REJECTED,
-					now
-			);
-			next = bookingRepository.findFirstByItemIdAndBookingStatusNotAndStartAfterOrderByStartAsc(
-					itemId,
-					BookingStatus.REJECTED,
-					now
-			);
-		}
+		LocalDateTime now = LocalDateTime.now();
+		Booking last = bookingRepository.findFirstByItemIdAndBookingStatusNotAndStartBeforeOrderByStartDesc(
+				itemId,
+				BookingStatus.REJECTED,
+				now
+		);
+		Booking next = bookingRepository.findFirstByItemIdAndBookingStatusNotAndStartAfterOrderByStartAsc(
+				itemId,
+				BookingStatus.REJECTED,
+				now
+		);
 		List<CommentDto> comments = commentRepository.findByItemIdOrderByCreatedDesc(itemId).stream()
 				.map(comment -> toCommentDto(comment, comment.getAuthor().getName()))
 				.collect(Collectors.toList());
@@ -142,7 +137,7 @@ public class ItemServiceImpl implements ItemService {
 		Long requestId = itemDto.getRequestId();
 		if (requestId != null) {
 			Optional<ItemRequest> itemRequestOptional = itemRequestRepository.findById(requestId);
-			if (itemRequestOptional.isEmpty()){
+			if (itemRequestOptional.isEmpty()) {
 				throw new ItemRequestNotFoundException("Запрос с id=" + requestId + " не найден");
 			}
 			itemRequest = itemRequestOptional.get();
@@ -230,7 +225,7 @@ public class ItemServiceImpl implements ItemService {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
 		String city = userOptional.get().getCity();
-		RestTemplate restTemplate =  new RestTemplate();
+		RestTemplate restTemplate = new RestTemplate();
 		String body = restTemplate.getForEntity(
 				"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY_WEATHER, //ссылка спрятать
 				String.class

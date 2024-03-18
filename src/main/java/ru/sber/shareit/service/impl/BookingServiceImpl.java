@@ -72,11 +72,13 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public BookingDtoFull approveBooking(Long userId, Long bookingId, boolean approved) {
 		Optional<Booking> bookingOptional = bookingRepository.findByIdAndItemOwnerId(bookingId, userId);
-		if (bookingOptional.isEmpty())
+		if (bookingOptional.isEmpty()) {
 			throw new BookingNotFoundException("Бронирование с id=" + bookingId + " не найдено");
+		}
 		Booking booking = bookingOptional.get();
-		if (!booking.getBookingStatus().equals(BookingStatus.WAITING))
+		if (!booking.getBookingStatus().equals(BookingStatus.WAITING)) {
 			throw new BookingStatusException("Статус бронирования не является 'WAITING'");
+		}
 		if (approved) {
 			booking.setBookingStatus(BookingStatus.APPROVED);
 			log.info("Пользователь с id={} подтвердил бронирование с id={}", userId, bookingId);

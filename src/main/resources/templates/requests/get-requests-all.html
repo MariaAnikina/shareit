@@ -6,18 +6,37 @@
     <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
 </head>
 <body>
-<a th:href="@{'/requests/all'(myCity=true)}"> Запросы моего города</a>
-
-<ul>
-    <li th:each="request : ${requests}">
-        <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
-    </li>
-</ul>
-
-
-<div>
-    <a th:if="${currentPage > 0}" th:href="@{/requests/all(from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
-    <a th:if="${requests.size() == size}" th:href="@{/requests/all(from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
+<nav class="navbar">
+    <form action="/items/search" method="get">
+        <input type="text" name="text"/>
+        <button type="submit">Найти</button>
+    </form>
+    <br>
+    <ul>
+        <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
+        <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+        <li><a th:href="@{/items/owner}">Мои вещи</a></li>
+        <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+        <li><a th:href="@{/bookings/}">Я забронировал</a></li>
+        <li><a th:href="@{/requests/}">Мои запросы</a></li>
+        <li><a th:href="@{/requests/all}">Все запросы</a></li>
+        <form th:action="@{/logout}" th:method="POST">
+            <input type="submit" value="Выйти">
+        </form>
+    </ul>
+</nav>
+<div class="container">
+    <a th:href="@{'/requests/all'(myCity=true)}"> Запросы моего города</a>
+    <ul>
+        <li th:each="request : ${requests}">
+            <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
+        </li>
+    </ul>
+    <a th:if="${currentPage > 0}" th:href="@{/requests/all(from=${currentPage * size - size}, size=${size})}">Предыдущая
+        страница</a>
+    <a th:if="${requests.size() == size}" th:href="@{/requests/all(from=${currentPage * size + size}, size=${size})}">Следующая
+        страница</a>
 </div>
+
 </body>
 </html>

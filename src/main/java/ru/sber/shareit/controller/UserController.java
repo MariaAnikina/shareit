@@ -52,7 +52,6 @@ public class UserController {
 	@PostMapping("/create")
 	public String performCreateUser(@Valid @ModelAttribute("user") UserDto userDto,
 	                                  BindingResult bindingResult) {
-//		userValidator.validate(userDto, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "users/create-user";
 		}
@@ -69,7 +68,7 @@ public class UserController {
 
 	@Validated(Update.class)
 	@PutMapping("/update")
-	public String performUpdateUser(@Valid @ModelAttribute("user") UserDto userDto,
+	public String performUpdateUser(@ModelAttribute("user") UserDto userDto,
 	                                BindingResult bindingResult) {
 		Long userId = getUserId();
 		userValidator.validate(userDto, bindingResult);
@@ -77,7 +76,7 @@ public class UserController {
 			return "users/update-user";
 		}
 		userService.update(userId, userDto);
-		return "redirect:/users";
+		return "redirect:/item/city";
 	}
 
 	@DeleteMapping("/delete/{userId}")

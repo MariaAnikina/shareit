@@ -41,9 +41,6 @@ public class BookingServiceImpl implements BookingService {
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
-		if (bookingDto.getStart().isBefore(LocalDateTime.now()) || bookingDto.getEnd().isBefore(LocalDateTime.now())) {
-			throw new BookingTimeException("Момент начала и окончания бронирования должны быть в будущем");
-		}
 		Long itemId = bookingDto.getItemId();
 		Optional<Item> itemOptional = itemRepository.findById(itemId);
 		if (itemOptional.isEmpty()) {

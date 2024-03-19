@@ -16,6 +16,8 @@ import ru.sber.shareit.util.UserValidator;
 import ru.sber.shareit.util.group.Create;
 import ru.sber.shareit.util.group.Update;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -65,8 +67,6 @@ public class UserController {
 		return "users/update-user";
 	}
 
-
-	@Validated(Update.class)
 	@PutMapping("/update")
 	public String performUpdateUser(@ModelAttribute("user") UserDto userDto,
 	                                BindingResult bindingResult) {
@@ -80,9 +80,13 @@ public class UserController {
 	}
 
 	@DeleteMapping("/delete/{userId}")
-	public String deleteUser(@PathVariable Long userId) {
+	public String deleteUser(@PathVariable Long userId, HttpServletResponse response) {
 		Long userIdAuth = getUserId();
 		userService.delete(userId, userIdAuth);
+		Cookie cookie = new Cookie("JSESSIONID", "");
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		response.addCookie(cookie);
 		return "auth/login";
 	}
 

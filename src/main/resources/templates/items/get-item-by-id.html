@@ -50,7 +50,7 @@
         <div th:if="${item.getLastBooking() != null}">
            <h5>Предыдущее последнее бронирование: </h5> <br>* начало
             <p th:text="${item.getLastBooking().getStart().format(format)}"></p>  <br>
-            * окончание <p th:text="${item.getLastBooking().getStart().format(format)}"></p>
+            * окончание <p th:text="${item.getLastBooking().getEnd().format(format)}"></p>
             <div th:if="${userId == item.getOwnerId()}">
                 * забронировал вещь пользователь с id:<a
                     th:href="@{/users/{userId}(userId=${item.getLastBooking().getBookerId()})}"><p
@@ -61,7 +61,7 @@
         <div th:if="${item.getNextBooking() != null}">
            <h5> Следующее первое бронирование: </h5>  <br>* начало
             <p th:text="${item.getNextBooking().getStart().format(format)}"></p>  <br>
-            * окончание <p th:text="${item.getNextBooking().getStart().format(format)}"></p>
+            * окончание <p th:text="${item.getNextBooking().getEnd().format(format)}"></p>
             <div th:if="${userId == item.getOwnerId()}">
                 * забронировал вещь пользователь с id:<a
                     th:href="@{/users/{userId}(userId=${item.getNextBooking().getBookerId()})}"><p
@@ -93,8 +93,6 @@
             <p>Дата: <span th:text="${comment.getCreated()}"></span></p>
         </div>
     </div>
-
 </div>
-
 </body>
 </html>

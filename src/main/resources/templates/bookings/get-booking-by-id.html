@@ -26,7 +26,7 @@
 </nav>
 <div class="container">
     <div>
-        <h4>Данные о бронировании</h4>
+        Данные о бронировании вещи: <span th:text="${booking.getItem().getName()}"></span><br>
         Начало бронирования: <span th:text="${booking.getStart()}"></span><br>
         Окончание бронирования: <span th:text="${booking.getEnd()}"></span><br>
         Статус бронирования: <span th:text="${booking.getBookingStatus()}"></span>
@@ -36,6 +36,8 @@
     </div>
 
     <div th:if="${booking.getItem().getOwnerId() == userId}">
+        <a th:href="@{/users/{userId}(userId=${booking.getBooker().getId()})}">Пользователь, который забронировал вещь </a>
+
         <form method="post" th:action="@{/bookings/{bookingId}(bookingId=${booking.getId()}, approved=true)}">
             <input type="hidden" name="_method" value="PATCH"/>
             <button type="submit">Подтвердить бронирование</button>

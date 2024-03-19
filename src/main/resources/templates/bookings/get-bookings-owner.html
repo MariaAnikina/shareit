@@ -31,12 +31,14 @@
     <a th:href="@{/bookings/owner(state=FUTURE)}">Будущие бронирования</a>
     <a th:href="@{/bookings/owner(state=WAITING)}">Ожидающие бронирования</a>
     <a th:href="@{/bookings/owner(state=REJECTED)}">Отклоненные бронирования</a>
-    <h4>Список бронирований</h4>
-    <ul>
-        <li th:each="booking : ${bookings}">
-            <a th:href="@{'/bookings/' + ${booking.getId()}}" th:text="${booking.getId()}"></a>
-        </li>
-    </ul>
+    <div>
+        <h4>Список бронирований</h4>
+        <ul>
+            <li th:each="booking : ${bookings}">
+                <a th:href="@{'/bookings/' + ${booking.getId()}}" th:text="${booking.getItem().getName()}"></a>
+            </li>
+        </ul>
+    </div>
     <a th:if="${currentPage > 0}"
        th:href="@{/bookings/owner(state=${state},from=${currentPage * size - size}, size=${size})}">Предыдущая
         страница</a>

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
@@ -115,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
 		log.info("Запрошен список вещей пользователем с id={}", userId);
-		return itemRepository.findByCity(userOptional.get().getCity(), getPageable(from, size)).stream()
+		return itemRepository.findByCityAndAvailableIsTrue(userOptional.get().getCity(), getPageable(from, size)).stream()
 				.map(this::toItemDtoInfo)
 				.collect(Collectors.toList());
 	}
@@ -158,8 +159,6 @@ public class ItemServiceImpl implements ItemService {
 		}
 		if (updateItem.getAvailable() == null) {
 			updateItem.setAvailable(oldItem.getAvailable());
-		} else {
-			updateItem.setAvailable(true);
 		}
 		updateItem.setCity(oldItem.getCity());
 		Item item = itemRepository.save(updateItem);
@@ -225,22 +224,27 @@ public class ItemServiceImpl implements ItemService {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
 		String city = userOptional.get().getCity();
-		RestTemplate restTemplate = new RestTemplate();
-		String body = restTemplate.getForEntity(
-				"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY_WEATHER, //ссылка спрятать
-				String.class
-		).getBody();
-		TemperatureIntervals temperatureInterval = temperatureMapper.getTemperatureInCelsiusFromString(body);
-		if (temperatureInterval == null) {
-			throw new TemperatureDoesNotCorrespondToAnyTemperatureIntervalException("Аномальная температура");
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String body = restTemplate.getForEntity(
+					"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY_WEATHER, //ссылка спрятать
+					String.class
+			).getBody();
+			TemperatureIntervals temperatureInterval = temperatureMapper.getTemperatureInCelsiusFromString(body);
+			if (temperatureInterval == null) {
+				throw new TemperatureDoesNotCorrespondToAnyTemperatureIntervalException("Аномальная температура");
+			}
+			log.info("Запрошен список вещей соответствующих температурному интервалу [" +
+					temperatureInterval.getStartOfIntervalInclusive() + ";"
+					+ temperatureInterval.getEndOfIntervalNotInclusive() + "]");
+			return itemRepository.findAllByOwnerIdIsNotAndAvailableIsTrueAndRelevantTemperatureIntervalIsAndCityOrderByName(userId,
+							temperatureInterval, city, getPageable(from, size)).stream()
+					.map(this::toItemDtoInfo)
+					.collect(Collectors.toList());
+		} catch (RestClientException exception) {
+			throw new UnableDetermineTemperatureException("Не удалось определить температуру в вашем городе, " +
+					"проверьте правильно ли записан город в вашем профиле : " + city);
 		}
-		log.info("Запрошен список вещей соответствующих температурному интервалу [" +
-				temperatureInterval.getStartOfIntervalInclusive() + ";"
-				+ temperatureInterval.getEndOfIntervalNotInclusive() + "]");
-		return itemRepository.findAllByOwnerIdIsNotAndAvailableIsTrueAndRelevantTemperatureIntervalIsAndCityOrderByName(userId,
-						temperatureInterval, city, getPageable(from, size)).stream()
-				.map(this::toItemDtoInfo)
-				.collect(Collectors.toList());
 	}
 
 	private Pageable getPageable(int from, int size) {

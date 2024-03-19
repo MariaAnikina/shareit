@@ -26,12 +26,17 @@
     </ul>
 </nav>
 <div class="container">
+
     <a th:href="@{'/requests/all'}"> Все запросы </a>
-    <ul>
-        <li th:each="request : ${requests}">
-            <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
-        </li>
-    </ul>
+    <div>
+        <h4>Запросы в моем городе</h4>
+        <ul>
+            <li th:each="request : ${requests}">
+                <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
+            </li>
+        </ul>
+    </div>
+
     <a th:if="${currentPage > 0}"
        th:href="@{/requests/all(myCity=true, from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
     <a th:if="${requests.size() == size}"

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 	List<Item> findByOwnerId(Long userId, Pageable pageable);
-	List<Item> findByCity(String city, Pageable pageable);
+	List<Item> findByCityAndAvailableIsTrue(String city, Pageable pageable);
 
 	@Query("select it " +
 			"from Item as it " +

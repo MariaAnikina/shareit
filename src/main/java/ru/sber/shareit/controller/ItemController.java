@@ -29,8 +29,6 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/items")
 public class ItemController {
 	private final ItemService itemService;
-	private final ItemValidator itemValidator;
-	private final CommentValidator commentValidator;
 
 	@GetMapping("/create")
 	public String createItemPage(@ModelAttribute("item") ItemDto itemDto) {
@@ -62,14 +60,6 @@ public class ItemController {
 		return "items/get-item-by-id";
 	}
 
-	@GetMapping("/owner/{itemId}")
-	public String getOwnerItemById(@PathVariable Long itemId, Model model) {
-		Long userId = getUserId();
-		model.addAttribute("item", itemService.getItemById(userId, itemId));
-		model.addAttribute("itemId", itemId);
-		return "items/get-owner-item-by-id";
-	}
-
 	@GetMapping("/top")
 	public String getItemsTop(Model model, @RequestParam(defaultValue = "0") @PositiveOrZero int from,
 	                          @RequestParam(defaultValue = "3") @Positive int size) {
@@ -86,6 +76,7 @@ public class ItemController {
 		Long userId = getUserId();
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
+		model.addAttribute("userId", userId);
 		model.addAttribute("items", itemService.getItemsInYourCity(userId, from, size));
 		return "items/get-items";
 	}
@@ -136,14 +127,8 @@ public class ItemController {
 	}
 
 	@PostMapping("/comment/{itemId}")
-	public String addComment(@Valid @ModelAttribute("comment") CommentDto commentDto,
-	                         BindingResult bindingResult, @PathVariable Long itemId) {
-
+	public String addComment(@Valid @ModelAttribute("comment") CommentDto commentDto, @PathVariable Long itemId) {
 		Long userId = getUserId();
-		commentValidator.validate(commentDto, bindingResult);
-		if (bindingResult.hasErrors()) {
-			return "redirect:/items/" + itemId;
-		}
 		itemService.addComment(userId, itemId, commentDto);
 		return "redirect:/items/" + itemId;
 	}

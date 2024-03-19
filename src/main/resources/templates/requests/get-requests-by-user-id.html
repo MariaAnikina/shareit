@@ -8,9 +8,10 @@
 <body>
 <nav class="navbar">
     <form action="/items/search" method="get">
-        <input type="text" name="text" />
+        <input type="text" name="text"/>
         <button type="submit">Найти</button>
-    </form> <br>
+    </form>
+    <br>
     <ul>
         <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
         <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
@@ -25,12 +26,14 @@
     </ul>
 </nav>
 <div class="container">
-    <h4>Список запросов</h4>
-    <ul>
-        <li th:each="request : ${requests}">
-            <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
-        </li>
-    </ul>
+    <div>
+        <h4>Список запросов</h4>
+        <ul>
+            <li th:each="request : ${requests}">
+                <a th:href="@{'/requests/' + ${request.getId()}}" th:text="${request.getDescription()}"></a>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

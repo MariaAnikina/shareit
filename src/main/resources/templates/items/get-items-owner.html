@@ -26,12 +26,15 @@
     </ul>
 </nav>
 <div class="container">
-    <h4>Мои вещи</h4>
-    <ul>
-        <li th:each="item : ${items}">
-            <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
-        </li>
-    </ul>
+    <a th:href="@{'/items/create'}"> Создать новую вещь </a>
+    <div>
+        <h4>Мои вещи</h4>
+        <ul>
+            <li th:each="item : ${items}">
+                <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
+            </li>
+        </ul>
+    </div>
     <a th:if="${currentPage > 0}" th:href="@{/items(from=${currentPage * size - size}, size=${size})}">Предыдущая
         страница</a>
     <a th:if="${items.size() == size}" th:href="@{/items(from=${currentPage * size + size}, size=${size})}">Следующая

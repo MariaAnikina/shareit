@@ -40,7 +40,7 @@ public class ErrorHandler {
 	}
 
 	@ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class,
-			BookingNotFoundException.class, ItemRequestNotFoundException.class })
+			BookingNotFoundException.class, ItemRequestNotFoundException.class, UnableDetermineTemperatureException.class })
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@GetMapping("/not_found")
 	public String handleNotFoundException(RuntimeException e, Model model) {

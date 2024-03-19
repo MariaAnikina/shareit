@@ -5,7 +5,13 @@
     <title>Registration</title>
     <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
     <style> body {
+        font-size: 25px;
         background-color: #cddecd;
+    }
+    input {
+        font-size: 15px;
+        padding: 10px;
+        width: 250px;
     }</style>
 </head>
 <body>
@@ -14,9 +20,9 @@
     <form th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
         <label for="username">Введите логин</label>
         <input type="text" th:field="*{username}" id="username"/>
-            <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
-                Некорректный логин
-            </div>
+        <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+            Некорректный логин
+        </div>
 
         <br/>
         <label for="password">Введите пароль</label>

@@ -25,14 +25,18 @@
     </ul>
 </nav>
 <div class="container">
-    <h4>В моем городе делятся</h4>
-    <ul>
-        <li th:each="item : ${items}">
-            <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
-        </li>
-    </ul>
-        <a th:if="${currentPage > 0}" th:href="@{/items/city(from=${currentPage * size - size}, size=${size})}">Предыдущая</a>
-        <a th:if="${items.size() == size}" th:href="@{/items/city(from=${currentPage * size + size}, size=${size})}">Следующая</a>
+    <div>
+        <h4>В моем городе делятся</h4>
+        <ul>
+            <li th:each="item : ${items}">
+                <a th:href="@{'/items/' + ${item.getId()}}" th:text="${item.getName()}"></a>
+            </li>
+        </ul>
+    </div>
+
+    <a th:href="@{'/users/' + ${userId}}"> Обо мне </a> <br>
+        <a th:if="${currentPage > 0}" th:href="@{/items/city(from=${currentPage * size - size}, size=${size})}">Предыдущая страница</a>
+        <a th:if="${items.size() == size}" th:href="@{/items/city(from=${currentPage * size + size}, size=${size})}">Следующая страница</a>
 
 </div>
 </body>

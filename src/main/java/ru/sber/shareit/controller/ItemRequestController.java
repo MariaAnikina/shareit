@@ -7,14 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.dto.request.ItemRequestDto;
 import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.ItemRequestService;
-import ru.sber.shareit.util.ItemRequestValidator;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -23,14 +22,12 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 public class ItemRequestController {
 	private final ItemRequestService itemRequestService;
-	private final ItemRequestValidator itemRequestValidator;
 
 	@PostMapping
-	public String create(@ModelAttribute("request") ItemRequestDto requestDto, BindingResult bindingResult) {
+	public String create(@Valid @ModelAttribute("request") ItemRequestDto requestDto, BindingResult bindingResult) {
 		Long userId = getUserId();
-		itemRequestValidator.validate(requestDto, bindingResult);
 		if (bindingResult.hasErrors()) {
-			return "redirect:/items/top"; // поменять?
+			return "redirect:/items/top";
 		}
 		itemRequestService.create(userId, requestDto);
 		return "redirect:/requests";

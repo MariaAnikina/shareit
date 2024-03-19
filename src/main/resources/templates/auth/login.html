@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Login page</title>
-    <link rel="stylesheet"  href="/style.css" th:href="@{/style.css}">
-    <style> body{
+    <link rel="stylesheet" href="/style.css" th:href="@{/style.css}">
+    <style>body {
+        font-size: 25px;
         background-color: #cddecd;
-    }</style>
+    }
+    input {
+        font-size: 15px;
+        padding: 10px;
+        width: 250px;
+    }
+    </style>
 </head>
 <body>
 <header>
@@ -14,22 +21,22 @@
 </header>
 <div class="logo"></div>
 <div style="text-align:center">
-<form name="f" method="post" action="/process_login">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    <label for="username">Введите имя пользователя</label>
-    <input type="text" name="username" id="username"/>
-    <br/>
-    <label for="password">Введите пароль</label>
-    <input type="password" name="password" id="password"/>
-    <br/><br/>
-    <input type="submit" value="Login"/>
-    <div th:if="${param.error}" style="color: red">
-    Неверные логин или пароль
-</div>
+    <form name="f" method="post" action="/process_login">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <label for="username">Введите имя пользователя</label>
+        <input type="text" name="username" id="username"/>
+        <br/>
+        <label for="password">Введите пароль</label>
+        <input type="password" name="password" id="password"/>
+        <br/><br/>
+        <input type="submit" value="Login"/>
+        <div th:if="${param.error}" style="color: red">
+            Неверные логин или пароль
+        </div>
 
-    <br/>
-    <a href="/auth/registration">Зарегистрироваться</a>  <br>
-</form>
+        <br/>
+        <a href="/auth/registration">Зарегистрироваться</a> <br>
+    </form>
 </div>
 </body>
 </html>

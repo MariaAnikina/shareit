@@ -6,21 +6,21 @@
     <link rel="stylesheet" href="/static/style.css" th:href="@{/style.css}">
 </head>
 <body>
-<h2>Все пользователи</h2>
-
-<ul>
-    <li th:each="user : ${users}">
-        <a th:href="@{'/users/' + ${user.getId()}}" th:text="${user.getUsername()}"></a>
-        <form method="post" th:action="@{/users/delete/{userId}(userId=${user.getId()})}">
-            <input type="hidden" name="_method" value="DELETE"/>
-            <button type="submit">Удалить аккаунт</button>
-        </form>
-    </li>
-</ul>
-
-<div>
+<div class="container">
+    <div>
+        <h4> Все пользователи</h4>
+        <ul>
+            <li th:each="user : ${users}">
+                <a th:href="@{'/users/' + ${user.getId()}}" th:text="${user.getUsername()}"></a>
+                <form method="post" th:action="@{/users/delete/{userId}(userId=${user.getId()})}">
+                    <input type="hidden" name="_method" value="DELETE"/>
+                    <button type="submit">Удалить аккаунт</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
     <a th:if="${currentPage > 0}" th:href="@{/users(from=${currentPage * size - size}, size=${size})}">Предыдущая</a>
     <a th:if="${users.size() == size}" th:href="@{/users(from=${currentPage * size + size}, size=${size})}">Следующая</a>
-</div>
 </body>
 </html>

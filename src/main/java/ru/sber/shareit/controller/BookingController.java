@@ -29,9 +29,6 @@ public class BookingController {
 	                                BindingResult bindingResult,
 	                                @PathVariable Long itemId) {
 		Long userId = getUserId();
-		if (bindingResult.hasErrors()) {
-			return "items/get-item-by-id";
-		}
 		bookingService.create(userId, bookingDto);
 		return "redirect:/items/" + itemId;
 	}

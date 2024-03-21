@@ -1,4 +1,4 @@
-package ru.sber.shareit.util;
+package ru.sber.shareit.util.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

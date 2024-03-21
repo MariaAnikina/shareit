@@ -13,6 +13,7 @@ import ru.sber.shareit.dto.booking.BookingDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.BookingService;
+import ru.sber.shareit.util.UserIdUtil;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -23,12 +24,12 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 public class BookingController {
 	private final BookingService bookingService;
+	private final UserIdUtil userIdUtil;
 
 	@PostMapping("/create/{itemId}")
 	public String performCreateItem(@Valid @ModelAttribute("booking") BookingDto bookingDto,
-	                                BindingResult bindingResult,
 	                                @PathVariable Long itemId) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		bookingService.create(userId, bookingDto);
 		return "redirect:/items/" + itemId;
 	}
@@ -40,7 +41,7 @@ public class BookingController {
 			@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
 			@RequestParam(defaultValue = "10") @Positive Integer size
 	) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		model.addAttribute("state", state);
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
@@ -50,7 +51,7 @@ public class BookingController {
 
 	@GetMapping("/{bookingId}")
 	public String getBookingById(@PathVariable Long bookingId, Model model) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		model.addAttribute("booking", bookingService.getById(userId, bookingId));
 		model.addAttribute("userId", userId);
 		return "bookings/get-booking-by-id";
@@ -61,7 +62,7 @@ public class BookingController {
 			@PathVariable Long bookingId,
 			@RequestParam boolean approved
 	) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		bookingService.approveBooking(userId, bookingId, approved);
 		return "redirect:/bookings/" + bookingId;
 	}
@@ -73,21 +74,11 @@ public class BookingController {
 			@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
 			@RequestParam(defaultValue = "10") @Positive Integer size
 	) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		model.addAttribute("state", state);
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
 		model.addAttribute("bookings", bookingService.getUserBookings(userId, state, from, size));
 		return "bookings/get-bookings-user";
-	}
-
-	private Long getUserId() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Long userId = null;
-		if (authentication.getPrincipal() instanceof UserDetails) {
-			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			userId = userDetails.getUser().getId();
-		}
-		return userId;
 	}
 }

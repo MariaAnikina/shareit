@@ -18,11 +18,9 @@ import java.time.LocalDateTime;
 public class BookingDto {
 	private Long id;
 	@NotNull(message = "Поле start не должно быть null")
-	@Future(message = "Поле start должно содержать дату, которая еще не наступила")
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime start;
 	@NotNull(message = "Поле end не должно быть null")
-	@Future(message = "Поле end должно содержать дату, которая еще не наступила")
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime end;
 	private Long itemId;

@@ -12,6 +12,7 @@ public enum TemperatureIntervals {
 	WARM (10.0, 20.0),
 	VERY_WARM (20.0, 50.0),
 	ALWAYS_RELEVANT (-50.0, 50.0),
+	ABNORMAL_TEMPERATURE(-1000.0, 1000.0),
 	;
 
 	private final Double startOfIntervalInclusive;

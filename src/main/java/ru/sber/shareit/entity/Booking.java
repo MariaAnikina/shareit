@@ -1,16 +1,16 @@
 package ru.sber.shareit.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.sber.shareit.entity.enums.BookingStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "bookings")
 public class Booking {

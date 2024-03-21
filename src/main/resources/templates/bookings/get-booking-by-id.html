@@ -11,14 +11,14 @@
         <input type="text" name="text" />
         <button type="submit">Найти</button>
     </form> <br>
-    <ul>
-        <li><a th:href="@{/items/city}">В моем городе делятся</a></li>
-        <li><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
-        <li><a th:href="@{/items/owner}">Мои вещи</a></li>
-        <li><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
-        <li><a th:href="@{/bookings/}">Я забронировал</a></li>
-        <li><a th:href="@{/requests/}">Мои запросы</a></li>
-        <li><a th:href="@{/requests/all}">Все запросы</a></li>
+    <ul class="nav">
+        <li class="nav-item"><a th:href="@{/items/city}">В моем городе делятся</a></li>
+        <li class="nav-item"><a th:href="@{/items/top}">Сейчас особенно актуально</a></li>
+        <li class="nav-item"><a th:href="@{/items/owner}">Мои вещи</a></li>
+        <li class="nav-item"><a th:href="@{/bookings/owner}">Бронирование моих вещей</a></li>
+        <li class="nav-item"><a th:href="@{/bookings/}">Я забронировал</a></li>
+        <li class="nav-item"><a th:href="@{/requests/}">Мои запросы</a></li>
+        <li class="nav-item"><a th:href="@{/requests/all}">Все запросы</a></li>
         <form th:action="@{/logout}" th:method="POST">
             <input type="submit" value="Выйти">
         </form>

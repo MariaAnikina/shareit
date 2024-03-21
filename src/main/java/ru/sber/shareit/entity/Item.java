@@ -1,10 +1,7 @@
 package ru.sber.shareit.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.sber.shareit.entity.enums.TemperatureIntervals;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "items")
 public class Item {

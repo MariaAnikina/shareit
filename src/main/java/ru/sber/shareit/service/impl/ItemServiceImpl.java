@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import ru.sber.shareit.config.ConfigurationApp;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.entity.*;
@@ -40,7 +41,7 @@ public class ItemServiceImpl implements ItemService {
 	private final CommentRepository commentRepository;
 	private final TemperatureMapper temperatureMapper;
 	private final ItemRequestRepository itemRequestRepository;
-	private static final String API_KEY_WEATHER = "0559176db0fdda660a02176fe8a89461"; //в проперти????
+	private final ConfigurationApp configuration;
 
 	@Override
 	@Transactional
@@ -209,7 +210,7 @@ public class ItemServiceImpl implements ItemService {
 		}
 		Item item = itemOptional.get();
 		if (!bookingRepository.existsByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now())) {
-			throw new BookingEndTimeException("Бронирование еще не завершилось");
+			throw new BookingEndTimeException("Бронирование еще не завершилось или вы не владели этой вещью");
 		}
 		Comment comment = commentRepository.save(toComment(commentDto, item, author));
 		log.info("Добавлен комментарий '{}'", comment);
@@ -227,11 +228,11 @@ public class ItemServiceImpl implements ItemService {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			String body = restTemplate.getForEntity(
-					"https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY_WEATHER, //ссылка спрятать
+					String.format(configuration.getLink(), city, configuration.getKey()),
 					String.class
 			).getBody();
 			TemperatureIntervals temperatureInterval = temperatureMapper.getTemperatureInCelsiusFromString(body);
-			if (temperatureInterval == null) {
+			if (temperatureInterval == TemperatureIntervals.ABNORMAL_TEMPERATURE) {
 				throw new TemperatureDoesNotCorrespondToAnyTemperatureIntervalException("Аномальная температура");
 			}
 			log.info("Запрошен список вещей соответствующих температурному интервалу [" +
@@ -245,6 +246,7 @@ public class ItemServiceImpl implements ItemService {
 			throw new UnableDetermineTemperatureException("Не удалось определить температуру в вашем городе, " +
 					"проверьте правильно ли записан город в вашем профиле : " + city);
 		}
+
 	}
 
 	private Pageable getPageable(int from, int size) {

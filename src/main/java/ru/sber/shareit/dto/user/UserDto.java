@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.sber.shareit.util.group.Create;
-import ru.sber.shareit.util.group.Update;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

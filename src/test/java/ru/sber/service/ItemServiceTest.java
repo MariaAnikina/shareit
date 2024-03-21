@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
+import ru.sber.shareit.config.ConfigurationApp;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.entity.*;
@@ -48,6 +49,8 @@ public class ItemServiceTest {
 	private ItemRequestRepository itemRequestRepository;
 	@Mock
 	private TemperatureMapper temperatureMapper;
+	@Mock
+	private ConfigurationApp configurationApp;
 	@InjectMocks
 	private ItemServiceImpl itemService;
 
@@ -210,7 +213,7 @@ public class ItemServiceTest {
 				.when(userRepository.findById(anyLong()))
 				.thenReturn(Optional.of(user));
 		Mockito
-				.when(itemRepository.findByCity(anyString(), any()))
+				.when(itemRepository.findByCityAndAvailableIsTrue(anyString(), any()))
 				.thenReturn(List.of(item));
 		Mockito
 				.when(commentRepository.findByItemIdOrderByCreatedDesc(anyLong()))
@@ -557,7 +560,7 @@ public class ItemServiceTest {
 				() -> itemService.addComment(1L, 1L, toCommentDto(comment, user.getName()))
 		);
 
-		assertThat(e.getMessage(), equalTo("Бронирование еще не завершилось"));
+		assertThat(e.getMessage(), equalTo("Бронирование еще не завершилось или вы не владели этой вещью"));
 	}
 
 	@Test
@@ -565,6 +568,11 @@ public class ItemServiceTest {
 		Mockito
 				.when(userRepository.findById(anyLong()))
 				.thenReturn(Optional.of(user));
+		Mockito
+				.when(configurationApp.getLink()).thenReturn("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s");
+
+		Mockito
+				.when(configurationApp.getKey()).thenReturn("0559176db0fdda660a02176fe8a89461");
 		Mockito
 				.when(temperatureMapper.getTemperatureInCelsiusFromString(anyString()))
 				.thenReturn(TemperatureIntervals.NEUTRAL);

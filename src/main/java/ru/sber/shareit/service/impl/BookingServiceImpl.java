@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sber.shareit.dto.booking.BookingDto;
@@ -29,6 +30,7 @@ import static ru.sber.shareit.util.mapper.BookingMapper.toBookingDtoFull;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Repository
 public class BookingServiceImpl implements BookingService {
 	private final BookingRepository bookingRepository;
 	private final UserRepository userRepository;
@@ -55,6 +57,9 @@ public class BookingServiceImpl implements BookingService {
 		}
 		if (!bookingDto.getEnd().isAfter(bookingDto.getStart())) {
 			throw new BookingTimeException("Момент окончания бронирования должен быть позже начала");
+		}
+		if (bookingDto.getEnd().isBefore(LocalDateTime.now()) || bookingDto.getStart().isBefore(LocalDateTime.now()) ) {
+			throw new BookingTimeException("Момент окончания и начала бронирования должны быть в будущем");
 		}
 		bookingDto.setBookerId(userId);
 		bookingDto.setBookingStatus(BookingStatus.WAITING);

@@ -20,13 +20,13 @@ public class TemperatureMapper {
 			Double temperature = Double.parseDouble(jsonNode.get("main").findValue("temp").asText()) - 273;
 			return temperatureToTemperatureIntervalConverter(temperature);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e); //TODO обработать исключение сервис/маппер, вернуть null
+			throw new RuntimeException(e);
 		}
 	}
 
 	private TemperatureIntervals temperatureToTemperatureIntervalConverter(Double temperature) {
 		if (temperature < VERY_COLD.getStartOfIntervalInclusive()) {
-			return null;
+			return ABNORMAL_TEMPERATURE;
 		} else if (temperature < VERY_COLD.getEndOfIntervalNotInclusive()) {
 			return VERY_COLD;
 		} else if (temperature < COLD.getEndOfIntervalNotInclusive()) {
@@ -38,7 +38,7 @@ public class TemperatureMapper {
 		} else if (temperature < VERY_WARM.getEndOfIntervalNotInclusive()) {
 			return VERY_WARM;
 		} else {
-			return null;
+			return ABNORMAL_TEMPERATURE;
 		}
 	}
 }

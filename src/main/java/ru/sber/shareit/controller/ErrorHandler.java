@@ -25,7 +25,7 @@ public class ErrorHandler {
 	public String handleMethodArgumentNotValidException(MethodArgumentNotValidException e, Model model) {
 		String error = Objects.requireNonNull(e.getFieldError()).getDefaultMessage();
 		log.error(error);
-		model.addAttribute("response", new ErrorResponse(error, HttpStatus.BAD_REQUEST));
+		model.addAttribute("response", new ErrorResponse(error));
 		return "error-page";
 	}
 
@@ -35,7 +35,7 @@ public class ErrorHandler {
 	@GetMapping("/bad_request")
 	public String handleBadRequest(RuntimeException e, Model model) {
 		log.error(e.getMessage());
-		model.addAttribute("response", new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST));
+		model.addAttribute("response", new ErrorResponse(e.getMessage()));
 		return "error-page";
 	}
 
@@ -45,7 +45,7 @@ public class ErrorHandler {
 	@GetMapping("/not_found")
 	public String handleNotFoundException(RuntimeException e, Model model) {
 		log.error(e.getMessage());
-		model.addAttribute("response", new ErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND));
+		model.addAttribute("response", new ErrorResponse(e.getMessage()));
 		return "error-page";
 	}
 
@@ -54,7 +54,7 @@ public class ErrorHandler {
 	@GetMapping("/conflict")
 	public String handleAlreadyExistsException(RuntimeException e, Model model) {
 		log.error(e.getMessage());
-		model.addAttribute("response", new ErrorResponse(e.getMessage(), HttpStatus.CONFLICT));
+		model.addAttribute("response", new ErrorResponse(e.getMessage()));
 		return "error-page";
 
 	}
@@ -64,7 +64,7 @@ public class ErrorHandler {
 	@GetMapping("/forbidden")
 	public String handleWrongItemOwnerException(RuntimeException e, Model model) {
 		log.error(e.getMessage());
-		model.addAttribute("response", new ErrorResponse(e.getMessage(), HttpStatus.FORBIDDEN));
+		model.addAttribute("response", new ErrorResponse(e.getMessage()));
 		return "error-page";
 	}
 
@@ -75,7 +75,7 @@ public class ErrorHandler {
 		log.error(e.getMessage());
 		model.addAttribute(
 				"response",
-				new ErrorResponse("Произошла непредвиденная ошибка.", HttpStatus.INTERNAL_SERVER_ERROR)
+				new ErrorResponse("Произошла непредвиденная ошибка.")
 		);
 		return "error-page";
 	}
@@ -85,6 +85,5 @@ public class ErrorHandler {
 	@AllArgsConstructor
 	public static class ErrorResponse {
 		private final String error;
-		private final HttpStatus httpStatus;
 	}
 }

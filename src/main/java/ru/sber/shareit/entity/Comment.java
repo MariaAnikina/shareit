@@ -1,14 +1,14 @@
 package ru.sber.shareit.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
-@Data
 @Entity
 @Table(name = "comments")
 @NoArgsConstructor

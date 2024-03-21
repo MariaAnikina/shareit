@@ -2,22 +2,16 @@ package ru.sber.shareit.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.booking.BookingDto;
 import ru.sber.shareit.dto.item.CommentDto;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.dto.request.ItemRequestDto;
-import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.ItemService;
-import ru.sber.shareit.util.CommentValidator;
-import ru.sber.shareit.util.ItemValidator;
+import ru.sber.shareit.util.UserIdUtil;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -29,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/items")
 public class ItemController {
 	private final ItemService itemService;
+	private final UserIdUtil userIdUtil;
 
 	@GetMapping("/create")
 	public String createItemPage(@ModelAttribute("item") ItemDto itemDto) {
@@ -38,7 +33,7 @@ public class ItemController {
 	@PostMapping("/create")
 	public String performCreateItem(@Valid @ModelAttribute("item") ItemDto itemDto,
 	                                BindingResult bindingResult) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		if (bindingResult.hasErrors()) {
 			return "items/create-item";
 		}
@@ -48,9 +43,9 @@ public class ItemController {
 
 	@GetMapping("/{itemId}")
 	public String getItemById(@PathVariable Long itemId, Model model) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		ItemDto itemById = itemService.getItemById(userId, itemId);
-		model.addAttribute("userId", getUserId());
+		model.addAttribute("userId", userId);
 		model.addAttribute("item", itemById);
 		model.addAttribute("itemId", itemId);
 		model.addAttribute("comment", new CommentDto());
@@ -63,7 +58,7 @@ public class ItemController {
 	@GetMapping("/top")
 	public String getItemsTop(Model model, @RequestParam(defaultValue = "0") @PositiveOrZero int from,
 	                          @RequestParam(defaultValue = "3") @Positive int size) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
 		model.addAttribute("items", itemService.getItemsByTemperatureIntervalInYourCity(userId, from, size));
@@ -73,7 +68,7 @@ public class ItemController {
 	@GetMapping("/city")
 	public String getItemsYourCity(Model model, @RequestParam(defaultValue = "0") @PositiveOrZero int from,
 	                               @RequestParam(defaultValue = "3") @Positive int size) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
 		model.addAttribute("userId", userId);
@@ -91,7 +86,7 @@ public class ItemController {
 	@PutMapping("/update/{itemId}")
 	public String performUpdateUser(@ModelAttribute("item") ItemDto itemDto,
 	                                BindingResult bindingResult, @PathVariable Long itemId) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		itemDto.setId(itemId);
 		itemService.update(userId, itemDto);
 		return "redirect:/items/top";
@@ -99,7 +94,7 @@ public class ItemController {
 
 	@DeleteMapping("/delete/{itemId}")
 	public String deleteUser(@PathVariable Long itemId) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		itemService.delete(userId, itemId);
 		return "redirect:/items/top";
 	}
@@ -107,7 +102,7 @@ public class ItemController {
 	@GetMapping("/owner")
 	public String getItemsByUserId(Model model, @RequestParam(defaultValue = "0") @PositiveOrZero int from,
 	                               @RequestParam(defaultValue = "10") @Positive int size) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		model.addAttribute("currentPage", from / size);
 		model.addAttribute("size", size);
 		model.addAttribute("items", itemService.getItemsByUserId(userId, from, size));
@@ -128,18 +123,8 @@ public class ItemController {
 
 	@PostMapping("/comment/{itemId}")
 	public String addComment(@Valid @ModelAttribute("comment") CommentDto commentDto, @PathVariable Long itemId) {
-		Long userId = getUserId();
+		Long userId = userIdUtil.getUserId();
 		itemService.addComment(userId, itemId, commentDto);
 		return "redirect:/items/" + itemId;
-	}
-
-	private Long getUserId() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Long userId = null;
-		if (authentication.getPrincipal() instanceof UserDetails) {
-			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			userId = userDetails.getUser().getId();
-		}
-		return userId;
 	}
 }

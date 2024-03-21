@@ -1,9 +1,6 @@
 package ru.sber.shareit.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 import ru.sber.shareit.entity.enums.Role;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Component
 @Table(name = "users")

@@ -12,10 +12,5 @@ public class ShareitApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ShareitApplication.class, args);
 	}
-	@Bean
-	public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
-		return new HiddenHttpMethodFilter();
-	}
+
 }
-//http://localhost:8080/items/owner/5
-//http://localhost:8080/items/create

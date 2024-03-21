@@ -33,7 +33,7 @@ public class GetItemsByUserIdTest {
 	private final UserService userService;
 
 	@Test
-	public void shouldGetItemsByUserId() {
+	public void getItemsByUserIdTest_whenItemsFound_thenReturnListItemsDto() {
 		ItemDto itemDto = new ItemDto(
 				null,
 				"Test name",
@@ -71,7 +71,7 @@ public class GetItemsByUserIdTest {
 	}
 
 	@Test
-	public void shouldNotGetItemsByUserIdWhenUserNotFound() {
+	public void getItemsByUserIdTest_whenUserNotFound_thenReturnUserNotFoundException() {
 		UserNotFoundException e = Assertions.assertThrows(
 				UserNotFoundException.class,
 				() -> itemService.getItemsByUserId(1L, 0, 5)

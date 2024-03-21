@@ -173,4 +173,17 @@ class ItemControllerTest {
 				.andExpect(model().attribute("items", items))
 				.andExpect(status().isOk());
 	}
+
+	@SneakyThrows
+	@Test
+	void addCommentTest_whenCommentValid_thenReturnViewItemById() {
+		CommentDto commentDto = new CommentDto(1L,"text", "TEST", "2024-03-19 22-22");
+		mvc.perform(post("/items/create")
+						.characterEncoding(StandardCharsets.UTF_8)
+						.flashAttr("comment", commentDto)
+						.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("items/create-item"))
+				.andExpect(status().isOk());
+	}
+
 }

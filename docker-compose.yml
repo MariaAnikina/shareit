@@ -1,28 +1,28 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db:
-    image: postgres:13.7-alpine
+    image: postgres:14.1
     container_name: container_db
     ports:
-      - "6541:5432"
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=shareit
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=iamroot
+      POSTGRES_DB: "shareit"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "iamroot"
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   web:
-    build: .
     image: server_image
     container_name: server_container
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8183:8183"
     depends_on:
       - db
     environment:
-      - DB_NAME=shareit
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=iamroot
-      - DB_HOST=db
-      - DB_PORT=5432
+      - SERVER_PORT= 8183
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db/shareit

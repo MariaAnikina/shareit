@@ -1,4 +1,4 @@
-package ru.sber.controller;
+package ru.sber.shareit.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

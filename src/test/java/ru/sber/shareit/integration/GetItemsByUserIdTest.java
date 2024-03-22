@@ -1,4 +1,4 @@
-package ru.sber.integration;
+package ru.sber.shareit.integration;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;

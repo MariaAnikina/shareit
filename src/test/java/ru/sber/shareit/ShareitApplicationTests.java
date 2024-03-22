@@ -1,4 +1,4 @@
-package ru.sber;
+package ru.sber.shareit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

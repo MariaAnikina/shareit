@@ -1,4 +1,4 @@
-package ru.sber.service;
+package ru.sber.shareit.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

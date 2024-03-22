@@ -42,11 +42,6 @@ public class UserControllerTest {
 
 	private final UserInfoDto userInfoDto = new UserInfoDto(1L, "test1", "User1",
 			"test1@email.com", "ROLE_USER", "Рязань");
-	private final UserDto userDto = new UserDto(1L, "test1", "123", "User1",
-			"test1@email.com", "ROLE_USER", "Рязань");
-	private final User user = new User(1L, "test1","123", "User1",
-			"test1@email.com", Role.ROLE_USER, "Рязань");
-
 
 	@SneakyThrows
 	@Test

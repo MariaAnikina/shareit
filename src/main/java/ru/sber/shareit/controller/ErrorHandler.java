@@ -70,7 +70,7 @@ public class ErrorHandler {
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@GetMapping
+	@GetMapping("/server")
 	public String handleInternalError(Throwable e, Model model) {
 		log.error(e.getMessage());
 		model.addAttribute(

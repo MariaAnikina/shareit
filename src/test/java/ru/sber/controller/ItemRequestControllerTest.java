@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class ItemRequestControllerTest {
 	@MockBean
-	private ItemRequestService itemRequestService;
+	private final ItemRequestService itemRequestService;
 	@MockBean
 	private final UserIdUtil userIdUtil;
 	private final MockMvc mvc;

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.user.UserDto;
+import ru.sber.shareit.entity.enums.Role;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.util.UserIdUtil;
 import ru.sber.shareit.util.validator.UserValidator;
@@ -77,6 +78,9 @@ public class UserController {
 	public String deleteUser(@PathVariable Long userId, HttpServletRequest request) {
 		Long userIdAuth = userIdUtil.getUserId();
 		userService.delete(userId, userIdAuth);
+		if (userService.getUserById(userIdAuth).getRole().equals(Role.ROLE_MODERATOR.toString())) {
+			return "redirect:/users";
+		}
 		request.getSession().invalidate();
 		return "auth/login";
 	}

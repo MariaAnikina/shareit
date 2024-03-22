@@ -12,7 +12,6 @@ import ru.sber.shareit.dto.user.UserAuthDto;
 import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.util.UserIdUtil;
-import ru.sber.shareit.util.validator.UserValidator;
 
 import javax.validation.Valid;
 
@@ -20,7 +19,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-	private final UserValidator userValidator;
 	private final UserService service;
 	private final UserIdUtil userIdUtil;
 

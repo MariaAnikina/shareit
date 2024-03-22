@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class UserInfoDto {
-	private Long id; //id оставила для фронта
+	private Long id;
 	private String username;
 	private String name;
 	private String email;
-	private String role; //юзер не должен знать о роли, оставила в рамках дебага
+	private String role;
 	private String city;
 }
 

@@ -9,7 +9,7 @@ import ru.sber.shareit.dto.item.CommentDto;
 public class CommentValidator implements Validator {
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return  CommentDto.class.equals(clazz);
+		return CommentDto.class.equals(clazz);
 	}
 
 	@Override

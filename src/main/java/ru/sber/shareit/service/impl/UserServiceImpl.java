@@ -10,26 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sber.shareit.dto.user.UserDto;
 import ru.sber.shareit.dto.user.UserInfoDto;
-import ru.sber.shareit.entity.enums.Role;
 import ru.sber.shareit.entity.User;
+import ru.sber.shareit.entity.enums.Role;
 import ru.sber.shareit.exception.UserAlreadyExistsException;
 import ru.sber.shareit.exception.UserNotFoundException;
 import ru.sber.shareit.repository.UserRepository;
 import ru.sber.shareit.service.UserService;
 import ru.sber.shareit.util.mapper.UserMapper;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.sber.shareit.util.mapper.UserMapper.*;
+import static ru.sber.shareit.util.mapper.UserMapper.toUser;
+import static ru.sber.shareit.util.mapper.UserMapper.toUserDto;
 
 @Slf4j
 @AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-
 	private final BCryptPasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService {
 	public List<UserInfoDto> getUsers(int from, int size) {
 		log.info("Запрошен список пользователей");
 		return userRepository.findAll(getPageable(from, size)).stream()
-				.sorted(Comparator.comparing(User::getUsername))
 				.map(UserMapper::toUserInfoDto)
 				.collect(Collectors.toList());
 	}
@@ -100,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void delete(Long id,  Long userIdAuth) {
+	public void delete(Long id, Long userIdAuth) {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException("Пользователь с id=" + id + " не найден");

@@ -10,7 +10,6 @@ import ru.sber.shareit.security.UserDetailsImpl;
 @Component
 @Getter
 public class UserIdUtil {
-
 	public Long getUserId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userId = null;

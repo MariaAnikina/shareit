@@ -29,7 +29,6 @@ import static ru.sber.shareit.util.mapper.ItemRequestMapper.toItemRequestDto;
 @Slf4j
 @Transactional
 public class ItemRequestServiceImpl implements ItemRequestService {
-
 	private final ItemRequestRepository itemRequestRepository;
 	private final UserRepository userRepository;
 	private final ItemRepository itemRepository;
@@ -53,10 +52,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 			throw new UserNotFoundException("Пользователь с id=" + userId + " не найден");
 		}
 		log.info("Пользователь с id={} запросил свои запросы", userId);
-		return itemRequestRepository.findByRequestorIdOrderByCreatedDesc(userId).stream()
-				.peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId())))
-				.map(ItemRequestMapper::toItemRequestDto)
-				.collect(Collectors.toList());
+		return itemRequestRepository.findByRequestorIdOrderByCreatedDesc(userId).stream().peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId()))).map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
 	}
 
 	@Override
@@ -69,17 +65,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 		int page = from / size;
 		if (!myCity) {
 			log.info("Пользователь с id={} запросил запросы других пользователей", userId);
-			return itemRequestRepository.findByRequestorIdNotOrderByCreatedDesc(userId, PageRequest.of(page, size)).stream()
-					.peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId())))
-					.map(ItemRequestMapper::toItemRequestDto)
-					.collect(Collectors.toList());
+			return itemRequestRepository.findByRequestorIdNotOrderByCreatedDesc(userId, PageRequest.of(page, size)).stream().peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId()))).map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
 		} else {
 			log.info("Пользователь с id={} запросил запросы других пользователей в своем городе", userId);
-			return itemRequestRepository.findByRequestorIdNotAndRequestorCityIsOrderByCreatedDesc(userId,
-							userOptional.get().getCity(), PageRequest.of(page, size)).stream()
-					.peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId())))
-					.map(ItemRequestMapper::toItemRequestDto)
-					.collect(Collectors.toList());
+			return itemRequestRepository.findByRequestorIdNotAndRequestorCityIsOrderByCreatedDesc(userId, userOptional.get().getCity(), PageRequest.of(page, size)).stream().peek(itemRequest -> itemRequest.setItems(itemRepository.findByRequestId(itemRequest.getId()))).map(ItemRequestMapper::toItemRequestDto).collect(Collectors.toList());
 		}
 	}
 

@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.sber.shareit.entity.enums.BookingStatus;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 

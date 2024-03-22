@@ -1,16 +1,12 @@
 package ru.sber.shareit.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.shareit.dto.item.ItemDto;
 import ru.sber.shareit.dto.request.ItemRequestDto;
-import ru.sber.shareit.security.UserDetailsImpl;
 import ru.sber.shareit.service.ItemRequestService;
 import ru.sber.shareit.util.UserIdUtil;
 

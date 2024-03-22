@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sber.shareit.dto.booking.BookingDto;
 import ru.sber.shareit.dto.booking.BookingDtoFull;
-import ru.sber.shareit.entity.*;
+import ru.sber.shareit.entity.Booking;
+import ru.sber.shareit.entity.Item;
+import ru.sber.shareit.entity.User;
 import ru.sber.shareit.entity.enums.BookingState;
 import ru.sber.shareit.entity.enums.BookingStatus;
 import ru.sber.shareit.exception.*;
@@ -58,7 +60,7 @@ public class BookingServiceImpl implements BookingService {
 		if (!bookingDto.getEnd().isAfter(bookingDto.getStart())) {
 			throw new BookingTimeException("Момент окончания бронирования должен быть позже начала");
 		}
-		if (bookingDto.getEnd().isBefore(LocalDateTime.now()) || bookingDto.getStart().isBefore(LocalDateTime.now()) ) {
+		if (bookingDto.getEnd().isBefore(LocalDateTime.now()) || bookingDto.getStart().isBefore(LocalDateTime.now())) {
 			throw new BookingTimeException("Момент окончания и начала бронирования должны быть в будущем");
 		}
 		bookingDto.setBookerId(userId);
@@ -210,7 +212,8 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return bookings.stream()
 				.map(BookingMapper::toBookingDtoFull)
-				.collect(Collectors.toList());	}
+				.collect(Collectors.toList());
+	}
 
 	private BookingState checkAvailabilityBookingStatusAndUser(Long userId, String stateString) {
 		BookingState state;

@@ -1,6 +1,9 @@
 package ru.sber.shareit.dto.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.sber.shareit.dto.item.ItemDto;
 
 import javax.validation.constraints.NotBlank;

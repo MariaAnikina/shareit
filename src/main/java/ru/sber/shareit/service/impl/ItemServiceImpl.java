@@ -34,7 +34,6 @@ import static ru.sber.shareit.util.mapper.ItemMapper.toItemDto;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
 	private final UserRepository userRepository;
 	private final ItemRepository itemRepository;
 	private final BookingRepository bookingRepository;
